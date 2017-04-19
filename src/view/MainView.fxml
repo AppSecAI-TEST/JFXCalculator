@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="297.0"
+            style="-fx-background-color: #9bc1d2;" stylesheets="@../application/styles.css"
+            xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="application.MainViewController">
+    <VBox>
+        <TextArea fx:id="display" prefHeight="38.0" prefWidth="239.0"/>
+        <GridPane alignment="CENTER" hgap="1.0" vgap="2.0">
+            <columnConstraints>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <Button fx:id="_0" alignment="CENTER" mnemonicParsing="false" onAction="#handleDigit" prefHeight="47.0"
+                    prefWidth="119.0" text="0" GridPane.columnSpan="3" GridPane.rowIndex="4"/>
+            <Button fx:id="_1" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDigit"
+                    prefHeight="47.0" prefWidth="59.0" text="1" GridPane.rowIndex="3"/>
+            <Button fx:id="_2" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDigit"
+                    prefHeight="47.0" prefWidth="59.0" text="2" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <Button fx:id="_3" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDigit"
+                    prefHeight="47.0" prefWidth="59.0" text="3" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+            <Button fx:id="_4" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDigit"
+                    prefHeight="47.0" prefWidth="59.0" text="4" GridPane.rowIndex="2"/>
+            <Button fx:id="_5" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDigit"
+                    prefHeight="47.0" prefWidth="59.0" text="5" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Button fx:id="_6" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDigit"
+                    prefHeight="47.0" prefWidth="59.0" text="6" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <Button fx:id="_7" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDigit"
+                    prefHeight="47.0" prefWidth="59.0" text="7" GridPane.rowIndex="1"/>
+            <Button fx:id="_8" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDigit"
+                    prefHeight="47.0" prefWidth="59.0" text="8" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <Button fx:id="_9" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDigit"
+                    prefHeight="47.0" prefWidth="59.0" text="9" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+            <Button fx:id="dot" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDigit"
+                    prefHeight="47.0" prefWidth="59.0" text="." GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+            <Button fx:id="clear" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDelete"
+                    prefHeight="47.0" prefWidth="59.0" styleClass="topOperations" text="AC"/>
+            <Button fx:id="sign" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleChangeSign"
+                    prefHeight="47.0" prefWidth="59.0" styleClass="topOperations" text="±"
+                    GridPane.columnIndex="1"/>
+            <Button fx:id="percent" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOperation"
+                    prefHeight="47.0" prefWidth="59.0" styleClass="topOperations" text="\%"
+                    GridPane.columnIndex="2"/>
+            <Button fx:id="division" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOperation"
+                    prefHeight="47.0" prefWidth="59.0" styleClass="operations" text="÷" GridPane.columnIndex="3"/>
+            <Button fx:id="multiply" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOperation"
+                    prefHeight="47.0" prefWidth="59.0" styleClass="operations" text="×" GridPane.columnIndex="3"
+                    GridPane.rowIndex="1"/>
+            <Button fx:id="minus" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOperation"
+                    prefHeight="47.0" prefWidth="59.0" styleClass="operations" text="-" GridPane.columnIndex="3"
+                    GridPane.rowIndex="2"/>
+            <Button fx:id="plus" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOperation"
+                    prefHeight="47.0" prefWidth="59.0" styleClass="operations" text="+" GridPane.columnIndex="3"
+                    GridPane.rowIndex="3"/>
+            <Button fx:id="equals" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleEquals"
+                    prefHeight="47.0" prefWidth="59.0" styleClass="operations" text="=" GridPane.columnIndex="3"
+                    GridPane.rowIndex="4"/>
+        </GridPane>
+    </VBox>
+</AnchorPane>
