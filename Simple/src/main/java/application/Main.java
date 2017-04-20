@@ -1,13 +1,16 @@
 package application;
 
 //TODO correct calculations
+//TODO REFACTOR + DIAGR
 //TODO LOGGING
 //TODO HISTORY
-//TODO APPLOGO
-//TODO REFACTOR
 //TODO TO FUNCTIONAL
 
+
 import java.io.IOException;
+
+import java.awt.Image;
+import java.awt.Toolkit;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -17,32 +20,40 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import com.apple.eawt.*;
 
 import control.MainViewController;
-
 
 public class Main extends Application {
 
     private Stage primaryStage;
 
-    Group root = new Group();
-    Scene scene = new Scene(root);
+    //Stage-scene-group
+    private Group root = new Group();
+    private Scene scene = new Scene(root);
 
 
-    //PrimStag-Scene-BorderPane-MenuBar-Menu-MenuItem
-    private BorderPane borderPane = new BorderPane();
+    //PrimStag-Scene-Group-BorderPane-MenuBar-Menu-MenuItem
+    //private BorderPane borderPane = new BorderPane();
     private MenuBar menuBar = new MenuBar();
 
 
-    //PrimStag-Scene-AnchorPane
+    //PrimStag-Scene-Group-AnchorPane
     private AnchorPane anchorPane;
 
     //Входная точка JFX
     @Override
     public void start(Stage primaryStage) {
+
+        try {
+            //TODO REALATIVE
+            Image image = Toolkit.getDefaultToolkit().getImage("src/main/resources/icon.png");
+            com.apple.eawt.Application.getApplication().setDockIconImage(image);
+        } catch (Exception e) {
+            //TODO
+            e.printStackTrace();
+        }
 
         this.primaryStage = primaryStage;
         primaryStage.setResizable(false);
@@ -51,6 +62,9 @@ public class Main extends Application {
 
         mainView();
         addMenuBar();
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     public void addMenuBar() {
@@ -83,8 +97,8 @@ public class Main extends Application {
 
         root.getChildren().add(menuBar);
         //(BorderPane+Scene) + Stage
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        //  primaryStage.setScene(scene);
+        // primaryStage.show();
     }
 
     public static void main(String[] args) {
@@ -100,15 +114,12 @@ public class Main extends Application {
             //GUI placement
             anchorPane = loader.load();
 
-                //(AnchorPane+Scene) + Stage
+                //(AnchorPane)Group + Stage
             root.getChildren().add(anchorPane);
-            primaryStage.setScene(scene);
-            primaryStage.show();
 
             //Logic
             MainViewController controller = loader.getController();
             controller.setMain(this);
-
 
         } catch (IOException | IllegalStateException e) {
             e.printStackTrace();

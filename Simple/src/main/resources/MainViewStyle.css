@@ -13,39 +13,53 @@
     -fx-text-alignment: right;
 }
 
-/* default для кнопки */
-.button {
+.number {
     -fx-background-radius: 0;
     -fx-background-color: #eff4ff;
     -fx-font-family: "Helvetica Neue";
     -fx-font-size: 21px;
 }
 
-.button:pressed {
+.number:hover {
+    -fx-background-color: #aac2dd;
+}
+
+.number:pressed {
     -fx-background-color: #6093e0;
+    -fx-font-size: 25px;
 }
 
 .operations {
     -fx-background-radius: 0;
-    -fx-background-color: #2776ef;
+    -fx-background-color: #3482ef;
     -fx-font-family: "Helvetica Neue";
     -fx-text-fill: #ffffff;
-    -fx-font-size: 28px;
+    -fx-font-size: 27px;
+}
+
+.operations:hover {
+    -fx-background-color: #1d6197;
 }
 
 .operations:pressed {
-    -fx-background-color: #2b5797;
+    -fx-background-color: #224f97;
+    -fx-font-size: 28.5px;
 }
 
 .topOperations {
     -fx-background-radius: 0;
-    -fx-background-color: #3482ef;
+    -fx-background-color: #6fa9ef;
     -fx-font-family: "Helvetica Neue";
     -fx-text-fill: #ffffff;
     -fx-font-size: 20px;
 }
 
-.topOperations:pressed {
-    -fx-background-color: #2b5797;
+.topOperations:hover {
+    -fx-background-color: #1d6197
 }
 
+.topOperations:pressed {
+    -fx-background-color: #2b5797;
+    -fx-font-size: 21px;
+}
+/* default для кнопки */
