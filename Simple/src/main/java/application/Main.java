@@ -11,12 +11,14 @@ import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import control.MainViewController;
@@ -25,18 +27,30 @@ import control.MainViewController;
 public class Main extends Application {
 
     private Stage primaryStage;
+
+    Group root = new Group();
+    Scene scene = new Scene(root);
+
+
+    //PrimStag-Scene-BorderPane-MenuBar-Menu-MenuItem
+    private BorderPane borderPane = new BorderPane();
     private MenuBar menuBar = new MenuBar();
+
+
+    //PrimStag-Scene-AnchorPane
+    private AnchorPane anchorPane;
 
     //Входная точка JFX
     @Override
     public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
 
+        this.primaryStage = primaryStage;
         primaryStage.setResizable(false);
         primaryStage.setTitle("JFXCalculator");
 
-        addMenuBar();
+
         mainView();
+        addMenuBar();
     }
 
     public void addMenuBar() {
@@ -45,6 +59,7 @@ public class Main extends Application {
         Menu menu = new Menu("Menu");
 
         MenuItem history = new MenuItem("History");
+        //TODO HISTORY
         history.setOnAction(actionEvent -> {});
 
         MenuItem close = new MenuItem("Close");
@@ -52,25 +67,30 @@ public class Main extends Application {
 
         menu.getItems().addAll(history, close);
 
+        ////////////////////////////////////
+        menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
         menuBar.getMenus().add(menu);
         ////////////////////////////////////
 
-
         final String os = System.getProperty("os.name");
-        if (os != null && os.startsWith("Mac"))
-            menuBar.useSystemMenuBarProperty().set(true);
 
-        BorderPane borderPane = new BorderPane();
-        borderPane.setTop(menuBar);
+        if (os != null && os.startsWith("Mac")) {
+             menuBar.useSystemMenuBarProperty().set(true);
+        }
 
-        primaryStage.setScene(new Scene(borderPane));
+        //MenuBar+borderPane
+       // borderPane.setTop(menuBar);
+
+        root.getChildren().add(menuBar);
+        //(BorderPane+Scene) + Stage
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
     public static void main(String[] args) {
         //Запуск отдельного приложения, первым вызывается метод init() если нужно что то иниц, потом start()
         //который и есть входная точка JFX
-        launch(args);
+        Main.launch(args);
     }
 
     public void mainView() {
@@ -78,12 +98,14 @@ public class Main extends Application {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/MainView.fxml"));
 
             //GUI placement
-            AnchorPane anchorPane = loader.load();
-            Scene scene = new Scene(anchorPane);
+            anchorPane = loader.load();
+
+                //(AnchorPane+Scene) + Stage
+            root.getChildren().add(anchorPane);
             primaryStage.setScene(scene);
             primaryStage.show();
 
-            //Logics
+            //Logic
             MainViewController controller = loader.getController();
             controller.setMain(this);
 
