@@ -19,6 +19,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import control.MainViewController;
 
 public class Main extends Application {
 
@@ -29,8 +30,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        primaryStage.setResizable(false);
 
+        primaryStage.setResizable(false);
         primaryStage.setTitle("JFXCalculator");
 
         addMenuBar();
@@ -38,11 +39,21 @@ public class Main extends Application {
     }
 
     public void addMenuBar() {
+
+        ///////////////////////////////////
         Menu menu = new Menu("Menu");
-        MenuItem mi = new MenuItem("Close");
-        mi.setOnAction(t -> System.exit(0));
-        menu.getItems().add(mi);
+
+        MenuItem history = new MenuItem("History");
+        history.setOnAction(actionEvent -> {});
+
+        MenuItem close = new MenuItem("Close");
+        close.setOnAction(actionEvent -> System.exit(0));
+
+        menu.getItems().addAll(history, close);
+
         menuBar.getMenus().add(menu);
+        ////////////////////////////////////
+
 
         final String os = System.getProperty("os.name");
         if (os != null && os.startsWith("Mac"))
@@ -63,7 +74,7 @@ public class Main extends Application {
 
     public void mainView() {
         try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/view/mainView.fxml"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/view/MainView.fxml"));
 
             //GUI placement
             AnchorPane anchorPane = loader.load();
@@ -72,12 +83,13 @@ public class Main extends Application {
             primaryStage.show();
 
             //Logics
-            application.MainViewController controller = loader.getController();
+            MainViewController controller = loader.getController();
             controller.setMain(this);
 
 
         } catch (IOException | IllegalStateException e) {
-            System.err.println(e.getMessage() + "(FXML file not found)");
+            e.printStackTrace();
+            //System.err.println(e.getMessage() + "(FXML file not found)");
             System.exit(-1);
         }
     }

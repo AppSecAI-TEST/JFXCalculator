@@ -1,38 +1,38 @@
-package application;
+package control;
+
+import java.util.IllegalFormatException;
 
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.Background;
 
-import java.awt.*;
-import java.util.IllegalFormatException;
+import application.Main;
+
 
 public class MainViewController {
 
     @FXML private TextArea display;
     @FXML private Button clear;
 
-    private boolean[] operator = new boolean[5];
+    private boolean[] operator = new boolean[4];
 
-    private int operatorCount = 0;
+ //   private int operatorCount = 0;
 
     private Double[] temporary = {0.0, 0.0};
 
     //private String actualText;
 
-    private Boolean newNumber = false;
+    private boolean newNumber = false;
 
     private Main main;
 
-    void setMain(Main main) {
+    public void setMain(Main main) {
         this.main = main;
         display.setEditable(false);
         display.setText("0");
 
     }
-
 
     @FXML
     public void handleDigit(Event event){
@@ -87,7 +87,6 @@ public class MainViewController {
                 }
                 break;
         }
-
 //		actualText = display.getText();
 //		System.out.println("Input data: " + actualText);
     }
@@ -99,9 +98,11 @@ public class MainViewController {
         for(int i = 0; i < 2; i++) {
             temporary[i] = 0.0;
         }
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < 4; i++) {
             operator[i] = false;
         }
+        newNumber = false;
+
     }
 
     @FXML
@@ -109,8 +110,10 @@ public class MainViewController {
 
         newNumber = true;
 
+
         Button btn = (Button) event.getSource();
         String operation = btn.getId();
+
 
         try {
             switch (operation) {
@@ -139,14 +142,16 @@ public class MainViewController {
                     temporary[0] = Double.parseDouble(display.getText());
                     break;
                 case "percent":
-                    operator[4] = true;
-                    temporary[0] = Double.parseDouble(display.getText());
+                    temporary[0] = Double.parseDouble(display.getText()) / 100;
                     break;
             }
         } catch (NumberFormatException e) {
-            System.err.println(e.getMessage());
+         //   System.err.println(e.getMessage());
         }
-        displayNumber(display.getText());
+
+        displayNumber(Double.toString(temporary[0]));
+
+
     }
 
     @FXML
@@ -182,11 +187,9 @@ public class MainViewController {
         } else if (operator[3]) {
             operator[3] = false;
             result = temporary[0] / temporary[1];
-        } else if (operator[4]) {
-            operator[4] = false;
-            result = temporary[0] % temporary[1];
         }
-        System.out.println("handleEquals: " + result);
+
+        //System.out.println("handleEquals: " + result);
 
         displayNumber(Double.toString(result));
 
