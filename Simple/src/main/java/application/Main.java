@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 
 import control.MainViewController;
 
+
 public class Main extends Application {
 
     private Stage primaryStage;
@@ -74,7 +75,7 @@ public class Main extends Application {
 
     public void mainView() {
         try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/view/MainView.fxml"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/MainView.fxml"));
 
             //GUI placement
             AnchorPane anchorPane = loader.load();

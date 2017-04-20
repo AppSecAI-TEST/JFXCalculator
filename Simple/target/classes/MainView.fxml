@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane maxHeight="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="297.0"
-            style="-fx-background-color: #9bc1d2;" stylesheets="@./MainViewStyle.css"
+            style="-fx-background-color: #9bc1d2;" stylesheets="@MainViewStyle.css"
             xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="control.MainViewController">
     <VBox>
