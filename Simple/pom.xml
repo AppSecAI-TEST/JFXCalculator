@@ -17,7 +17,9 @@
     </dependencies>
 
     <build>
+
         <plugins>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -43,9 +45,11 @@
                     </archive>
                 </configuration>
             </plugin>
+
         </plugins>
 
         <resources>
+
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
@@ -54,6 +58,8 @@
                     <include>**/*.ico</include>
                 </includes>
             </resource>
+
         </resources>
+
     </build>
 </project>

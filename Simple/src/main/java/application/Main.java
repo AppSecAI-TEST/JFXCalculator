@@ -1,6 +1,5 @@
 package application;
 
-//TODO correct calculations
 //TODO REFACTOR + DIAGR
 //TODO LOGGING
 //TODO HISTORY
@@ -21,7 +20,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import com.apple.eawt.*;
+
 
 import control.MainViewController;
 
@@ -47,7 +46,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         try {
-            //TODO REALATIVE
             Image image = Toolkit.getDefaultToolkit().getImage("src/main/resources/icon.png");
             com.apple.eawt.Application.getApplication().setDockIconImage(image);
         } catch (Exception e) {

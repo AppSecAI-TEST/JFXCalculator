@@ -24,6 +24,7 @@ public class MainViewController {
     //private String actualText;
 
     private boolean newNumber = false;
+    private boolean flag = true;
 
     private Main main;
 
@@ -93,6 +94,7 @@ public class MainViewController {
 
     @FXML
     public void handleDelete() {
+        flag = true;
         clear.setText("AC");
         display.setText("0");
         for(int i = 0; i < 2; i++) {
@@ -120,26 +122,45 @@ public class MainViewController {
                 case "plus":
 //					actualText = handleOperation;
 //					System.out.println(actualText);
+                    if (flag) {
+                        temporary[0] =  Double.parseDouble(display.getText());
+                    } else {
+                        temporary[0] += Double.parseDouble(display.getText());
+                    }
                     operator[0] = true;
-                    temporary[0] = Double.parseDouble(display.getText());
                     break;
                 case "minus":
 //					actualText = handleOperation;
 //					System.out.println(actualText);
+                    if (flag) {
+                        temporary[0] =  Double.parseDouble(display.getText());
+                    } else {
+                        temporary[0] -= Double.parseDouble(display.getText());
+                    }
                     operator[1] = true;
-                    temporary[0] = Double.parseDouble(display.getText());
+
                     break;
                 case "multiply":
 //					actualText = handleOperation;
 //					System.out.println(actualText);
+                    if (flag) {
+                        temporary[0] =  Double.parseDouble(display.getText());
+                    } else {
+                        temporary[0] *= Double.parseDouble(display.getText());
+                    }
                     operator[2] = true;
-                    temporary[0] = Double.parseDouble(display.getText());
                     break;
                 case "division":
 //					actualText = handleOperation;
 //					System.out.println(actualText);
+
+                    if (flag) {
+                        temporary[0] =  Double.parseDouble(display.getText());
+                    } else {
+                        temporary[0] /= Double.parseDouble(display.getText());
+                    }
                     operator[3] = true;
-                    temporary[0] = Double.parseDouble(display.getText());
+
                     break;
                 case "percent":
                     temporary[0] = Double.parseDouble(display.getText()) / 100;
@@ -149,6 +170,7 @@ public class MainViewController {
          //   System.err.println(e.getMessage());
         }
 
+        flag = false;
         displayNumber(Double.toString(temporary[0]));
 
 
@@ -156,6 +178,7 @@ public class MainViewController {
 
     @FXML
     public void handleChangeSign() {
+
         double number = Double.parseDouble(display.getText());
         try {
             if (number != 0) {
@@ -174,6 +197,7 @@ public class MainViewController {
     @FXML
     public void handleEquals() {
         double result = 0;
+        flag = true;
         temporary[1] = Double.parseDouble(display.getText());
         if (operator[0]){
             operator[0] = false;
