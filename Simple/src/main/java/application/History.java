@@ -12,19 +12,18 @@ import javafx.stage.Stage;
 class History {
     private ObservableList<Expression> historyLogs;
 
-    private Stage historyStage = new Stage();
-
     private Group group = new Group();
-    private Scene scene = new Scene(group);
-
 
     History(ObservableList<Expression> historyLogs) {
         this.historyLogs = historyLogs;
 
+        Stage historyStage = new Stage();
         historyStage.setTitle("History");
         historyStage.setResizable(false);
 
         createHistoryView();
+
+        Scene scene = new Scene(group);
 
         historyStage.setScene(scene);
         historyStage.show();
@@ -34,13 +33,13 @@ class History {
         TableView<Expression> tableView = new TableView<>();
 
         TableColumn<Expression, String> expressionTableColumn = new TableColumn<>("Expression");
-        expressionTableColumn.setMinWidth(200);
-        expressionTableColumn.setResizable(false);
+        expressionTableColumn.setMinWidth(250);
+        expressionTableColumn.setResizable(true);
         expressionTableColumn.setCellValueFactory(new PropertyValueFactory<>("exp"));
 
         TableColumn<Expression, String> resultTableColumn = new TableColumn<>("Result");
-        resultTableColumn.setMinWidth(50);
-        resultTableColumn.setResizable(false);
+        resultTableColumn.setMinWidth(150);
+        resultTableColumn.setResizable(true);
         resultTableColumn.setCellValueFactory(new PropertyValueFactory<>("result"));
 
         tableView.setItems(historyLogs);

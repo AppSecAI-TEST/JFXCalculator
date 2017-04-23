@@ -5,6 +5,7 @@ package application;
 import java.io.IOException;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -56,6 +57,8 @@ public class Main extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        primaryStage.setOnCloseRequest(actionEvent -> Platform.exit());
     }
 
     private void createMainView() {
@@ -81,10 +84,7 @@ public class Main extends Application {
         Menu menu = new Menu("Menu");
 
         MenuItem history = new MenuItem("History");
-
-        history.setOnAction(actionEvent -> {
-            new History(historyLogs);
-        });
+        history.setOnAction(actionEvent -> new History(historyLogs));
 
         MenuItem close = new MenuItem("Close");
         close.setOnAction(actionEvent -> System.exit(0));

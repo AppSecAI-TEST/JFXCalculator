@@ -1,6 +1,5 @@
 package control;
 
-import java.math.BigInteger;
 import java.util.IllegalFormatException;
 
 import javafx.event.Event;
@@ -44,38 +43,38 @@ public class MainViewController {
         }
 
         Button btn = (Button) event.getSource();
-        String operation = btn.getId();
+        String number_id = btn.getId();
 
-        switch(operation) {
+        switch(number_id) {
             case "_0" :
-                displayDigit(operation);
+                displayDigit(number_id);
                 break;
             case "_1" :
-                displayDigit(operation);
+                displayDigit(number_id);
                 break;
             case "_2" :
-                displayDigit(operation);
+                displayDigit(number_id);
                 break;
             case "_3" :
-                displayDigit(operation);
+                displayDigit(number_id);
                 break;
             case "_4" :
-                displayDigit(operation);
+                displayDigit(number_id);
                 break;
             case "_5" :
-                displayDigit(operation);
+                displayDigit(number_id);
                 break;
             case "_6" :
-                displayDigit(operation);
+                displayDigit(number_id);
                 break;
             case "_7" :
-                displayDigit(operation);
+                displayDigit(number_id);
                 break;
             case "_8" :
-                displayDigit(operation);
+                displayDigit(number_id);
                 break;
             case "_9" :
-                displayDigit(operation);
+                displayDigit(number_id);
                 break;
             case "dot" :
                 if (display.getText().equals("")) {
@@ -86,7 +85,6 @@ public class MainViewController {
                 }
                 break;
         }
-
         newNumber = false;
     }
 
@@ -123,7 +121,7 @@ public class MainViewController {
             System.err.println("[wrong numeric format]");
         }
 
-        displayNumber(Double.toString(calculations[0]));
+        display.setText(parseNumber(calculations[0]));
 
         if (!firstOperation) {
             expResult = display.getText();
@@ -147,7 +145,7 @@ public class MainViewController {
 
         if (number != 0) {
             number = number * (-1);
-            displayNumber(Double.toString(number));
+            display.setText(parseNumber(number));
         }
     }
 
@@ -187,30 +185,26 @@ public class MainViewController {
             operations[0] = false;
             result = calculations[0] + calculations[1];
 
-            expression = calculations[0] + " + " + calculations[1];
-
+            expression = parseNumber(calculations[0]) + " + " + parseNumber(calculations[1]);
         } else if (operations[1]) {
             operations[1] = false;
             result = calculations[0] - calculations[1];
 
-            expression = calculations[0] + " - " + calculations[1];
-
+            expression = parseNumber(calculations[0]) + " - " + parseNumber(calculations[1]);
         } else if (operations[2]) {
             operations[2] = false;
             result = calculations[0] * calculations[1];
 
-            expression = calculations[0] + " * " + calculations[1];
-
+            expression = parseNumber(calculations[0]) + " * " + parseNumber(calculations[1]);
         } else if (operations[3]) {
             operations[3] = false;
             result = calculations[0] / calculations[1];
 
-            expression = calculations[0] + " / " + calculations[1];
-
+            expression = parseNumber(calculations[0]) + " / " + parseNumber(calculations[1]);
         }
 
-        displayNumber(Double.toString(result));
- //TODO
+        display.setText(parseNumber(result));
+
         expResult = display.getText();
         main.addHistory(new Expression(expression,expResult));
 
@@ -226,19 +220,19 @@ public class MainViewController {
                calculations[0] = Double.parseDouble(display.getText());
            } else {
                if (operations[0]) {
-                   expression = Double.toString(calculations[0]) + " + " + display.getText();
-                  //TODO
+                   expression = parseNumber(calculations[0]) + " + " + display.getText();
+
                    calculations[0] += Double.parseDouble(display.getText());
                } else if (operations[1]) {
-                   expression = Double.toString(calculations[0]) + " - " + display.getText();
+                   expression = parseNumber(calculations[0]) + " - " + display.getText();
 
                    calculations[0] -= Double.parseDouble(display.getText());
                } else if (operations[2]) {
-                   expression = Double.toString(calculations[0]) + " * " + display.getText();
+                   expression = parseNumber(calculations[0]) + " * " + display.getText();
 
                    calculations[0] *= Double.parseDouble(display.getText());
                } else if (operations[3]) {
-                   expression = Double.toString(calculations[0]) + " / " + display.getText();
+                   expression = parseNumber(calculations[0]) + " / " + display.getText();
 
                    calculations[0] /= Double.parseDouble(display.getText());
                }
@@ -254,36 +248,11 @@ public class MainViewController {
     }
 
     //ВЫВОД ЧИСЛА С ТОЧКОЙ ИЛИ БЕЗ
-    private void displayNumber(String numberToDisplay) {
-        Double number;
-
-        try {
-            number = Double.parseDouble(numberToDisplay);
-        } catch (IllegalFormatException e) {
-            display.setText("Error");
-            System.err.println(e.getMessage());
-            System.err.println("[wrong numeric format]");
-            return;
-        }
-
-        if (firstOperation) {
-            if (number == Math.floor(number) && Double.isFinite(number)) {
-                display.setText(Long.toString(number.longValue()));
-            } else {
-                String parsedDecimal = Double.toString(number);
-                display.setText(parsedDecimal);
-            }
+    private String parseNumber(Double number) {
+        if (number == Math.floor(number) && Double.isFinite(number)) {
+            return Long.toString(number.longValue());
         } else {
-            if (number == Math.floor(number) && Double.isFinite(number)) {
-                display.setText(Long.toString(number.longValue()));
-            } else {
-                String parsedDecimal = Double.toString(number);
-                if (parsedDecimal.length() < parsedDecimal.indexOf('.') + 6) {
-                    display.setText(parsedDecimal);
-                } else {
-                    display.setText(parsedDecimal.substring(0, parsedDecimal.indexOf('.') + 6));
-                }
-            }
+            return Double.toString(number);
         }
     }
 
