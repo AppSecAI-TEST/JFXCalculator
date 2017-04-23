@@ -60,7 +60,7 @@
             <Button fx:id="dot" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
                     minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDigit"
                     prefHeight="59.0" prefWidth="59.0" styleClass="number"  text="." GridPane.columnIndex="2" GridPane.rowIndex="4"/>
-            <Button fx:id="clear" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+            <Button fx:id="delete" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
                     minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDelete"
                     prefHeight="59.0" prefWidth="59.0" styleClass="topOperations" text="AC"/>
             <Button fx:id="sign" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"

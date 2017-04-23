@@ -1,5 +1,6 @@
 package control;
 
+import java.math.BigInteger;
 import java.util.IllegalFormatException;
 
 import javafx.event.Event;
@@ -8,45 +9,42 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 
 import application.Main;
-
+import expression.Expression;
 
 public class MainViewController {
 
-    @FXML private TextArea display;
-    @FXML private Button clear;
-
-    private boolean[] operator = new boolean[4];
-
- //   private int operatorCount = 0;
-
-    private Double[] temporary = {0.0, 0.0};
-
-    //private String actualText;
-
-    private boolean newNumber = false;
-    private boolean flag = true;
-
     private Main main;
 
-    public void setMain(Main main) {
+    private String expResult;
+    private String expression;
+
+    @FXML private TextArea display;
+    @FXML private Button delete;
+
+    private boolean[] operations = new boolean[4];
+
+    private Double[] calculations = {0.0, 0.0};
+
+    //Новое число или все еще цифра
+    private boolean newNumber = false;
+
+    private boolean firstOperation = true;
+
+    public void setMainView(Main main) {
         this.main = main;
         display.setEditable(false);
         display.setText("0");
-
     }
 
     @FXML
     public void handleDigit(Event event){
-
-        //No repeated zeroes aka (000) or (0111)
         if (display.getText().equals("0")){
-            clear.setText("C");
+            delete.setText("C");
             display.setText("");
         }
 
         Button btn = (Button) event.getSource();
         String operation = btn.getId();
-
 
         switch(operation) {
             case "_0" :
@@ -88,136 +86,171 @@ public class MainViewController {
                 }
                 break;
         }
-//		actualText = display.getText();
-//		System.out.println("Input data: " + actualText);
-    }
 
-    @FXML
-    public void handleDelete() {
-        flag = true;
-        clear.setText("AC");
-        display.setText("0");
-        for(int i = 0; i < 2; i++) {
-            temporary[i] = 0.0;
-        }
-        for(int i = 0; i < 4; i++) {
-            operator[i] = false;
-        }
         newNumber = false;
-
     }
 
     @FXML
     public void handleOperation(Event event) {
-
-        newNumber = true;
-
-
         Button btn = (Button) event.getSource();
         String operation = btn.getId();
-
 
         try {
             switch (operation) {
                 case "plus":
-//					actualText = handleOperation;
-//					System.out.println(actualText);
-                    if (flag) {
-                        temporary[0] =  Double.parseDouble(display.getText());
-                    } else {
-                        temporary[0] += Double.parseDouble(display.getText());
-                    }
-                    operator[0] = true;
+                    preformOperation();
+                    operations[0] = true;
                     break;
                 case "minus":
-//					actualText = handleOperation;
-//					System.out.println(actualText);
-                    if (flag) {
-                        temporary[0] =  Double.parseDouble(display.getText());
-                    } else {
-                        temporary[0] -= Double.parseDouble(display.getText());
-                    }
-                    operator[1] = true;
-
+                    preformOperation();
+                    operations[1] = true;
                     break;
                 case "multiply":
-//					actualText = handleOperation;
-//					System.out.println(actualText);
-                    if (flag) {
-                        temporary[0] =  Double.parseDouble(display.getText());
-                    } else {
-                        temporary[0] *= Double.parseDouble(display.getText());
-                    }
-                    operator[2] = true;
+                    preformOperation();
+                    operations[2] = true;
                     break;
                 case "division":
-//					actualText = handleOperation;
-//					System.out.println(actualText);
-
-                    if (flag) {
-                        temporary[0] =  Double.parseDouble(display.getText());
-                    } else {
-                        temporary[0] /= Double.parseDouble(display.getText());
-                    }
-                    operator[3] = true;
-
+                    preformOperation();
+                    operations[3] = true;
                     break;
                 case "percent":
-                    temporary[0] = Double.parseDouble(display.getText()) / 100;
+                    calculations[0] = Double.parseDouble(display.getText()) / 100;
                     break;
             }
         } catch (NumberFormatException e) {
-         //   System.err.println(e.getMessage());
+            display.setText("Error");
+            System.err.println(e.getMessage());
+            System.err.println("[wrong numeric format]");
         }
 
-        flag = false;
-        displayNumber(Double.toString(temporary[0]));
+        displayNumber(Double.toString(calculations[0]));
 
-
+        if (!firstOperation) {
+            expResult = display.getText();
+            main.addHistory(new Expression(expression, expResult));
+        }
+        newNumber = true;
+        firstOperation = false;
     }
 
     @FXML
     public void handleChangeSign() {
-
-        double number = Double.parseDouble(display.getText());
+        double number;
         try {
-            if (number != 0) {
-                number = number * (-1);
-                displayNumber(Double.toString(number));
-//
-//				actualText = display.getText();
-//				System.out.println("Input data: " + actualText);
-            }
+            number = Double.parseDouble(display.getText());
         } catch (IllegalFormatException e) {
-            //	display.setText("Error");
-            //	e.printStackTrace();
+            display.setText("Error");
+            System.err.println(e.getMessage());
+            System.err.println("[wrong numeric format]");
+            return;
         }
+
+        if (number != 0) {
+            number = number * (-1);
+            displayNumber(Double.toString(number));
+        }
+    }
+
+    @FXML
+    public void handleDelete() {
+        //restores default state
+        delete.setText("AC");
+        display.setText("0");
+        for(int i = 0; i < 2; i++) {
+            calculations[i] = 0.0;
+        }
+        for(int i = 0; i < 4; i++) {
+            operations[i] = false;
+        }
+
+        expression = "";
+        expResult = "";
+
+        firstOperation = true;
+        newNumber = false;
     }
 
     @FXML
     public void handleEquals() {
         double result = 0;
-        flag = true;
-        temporary[1] = Double.parseDouble(display.getText());
-        if (operator[0]){
-            operator[0] = false;
-            result = temporary[0] + temporary[1];
-        } else if (operator[1]){
-            operator[1] = false;
-            result = temporary[0] - temporary[1];
-        } else if (operator[2]){
-            operator[2] = false;
-            result = temporary[0] * temporary[1];
-        } else if (operator[3]) {
-            operator[3] = false;
-            result = temporary[0] / temporary[1];
+
+        try {
+            calculations[1] = Double.parseDouble(display.getText());
+        } catch (IllegalFormatException e) {
+            display.setText("Error");
+            System.err.println(e.getMessage());
+            System.err.println("[wrong numeric format]");
+            return;
         }
 
-        //System.out.println("handleEquals: " + result);
+        if (operations[0]) {
+            operations[0] = false;
+            result = calculations[0] + calculations[1];
+
+            expression = calculations[0] + " + " + calculations[1];
+
+        } else if (operations[1]) {
+            operations[1] = false;
+            result = calculations[0] - calculations[1];
+
+            expression = calculations[0] + " - " + calculations[1];
+
+        } else if (operations[2]) {
+            operations[2] = false;
+            result = calculations[0] * calculations[1];
+
+            expression = calculations[0] + " * " + calculations[1];
+
+        } else if (operations[3]) {
+            operations[3] = false;
+            result = calculations[0] / calculations[1];
+
+            expression = calculations[0] + " / " + calculations[1];
+
+        }
 
         displayNumber(Double.toString(result));
+ //TODO
+        expResult = display.getText();
+        main.addHistory(new Expression(expression,expResult));
 
-        //	operatorCount = 0;
+        firstOperation = true;
+        newNumber = true;
+    }
+
+//////////////////////////////////////////////////////////////////////
+    //ПРОИЗВЕСТИ ВЫЧИСЛЕНИЕ
+    private void preformOperation() {
+       try {
+           if (firstOperation) {
+               calculations[0] = Double.parseDouble(display.getText());
+           } else {
+               if (operations[0]) {
+                   expression = Double.toString(calculations[0]) + " + " + display.getText();
+                  //TODO
+                   calculations[0] += Double.parseDouble(display.getText());
+               } else if (operations[1]) {
+                   expression = Double.toString(calculations[0]) + " - " + display.getText();
+
+                   calculations[0] -= Double.parseDouble(display.getText());
+               } else if (operations[2]) {
+                   expression = Double.toString(calculations[0]) + " * " + display.getText();
+
+                   calculations[0] *= Double.parseDouble(display.getText());
+               } else if (operations[3]) {
+                   expression = Double.toString(calculations[0]) + " / " + display.getText();
+
+                   calculations[0] /= Double.parseDouble(display.getText());
+               }
+           }
+           for (int i = 0; i < operations.length; i++) {
+               operations[i] = false;
+           }
+       } catch (IllegalFormatException e) {
+           display.setText("Error");
+           System.err.println(e.getMessage());
+           System.err.println("[wrong numeric format]");
+       }
     }
 
     //ВЫВОД ЧИСЛА С ТОЧКОЙ ИЛИ БЕЗ
@@ -227,14 +260,30 @@ public class MainViewController {
         try {
             number = Double.parseDouble(numberToDisplay);
         } catch (IllegalFormatException e) {
-            //System.err.println("Wrong format");
+            display.setText("Error");
+            System.err.println(e.getMessage());
+            System.err.println("[wrong numeric format]");
             return;
         }
 
-        if (number == Math.floor(number) && Double.isFinite(number)) {
-            display.setText(Integer.toString(number.intValue()));
+        if (firstOperation) {
+            if (number == Math.floor(number) && Double.isFinite(number)) {
+                display.setText(Long.toString(number.longValue()));
+            } else {
+                String parsedDecimal = Double.toString(number);
+                display.setText(parsedDecimal);
+            }
         } else {
-            display.setText(Double.toString(number));
+            if (number == Math.floor(number) && Double.isFinite(number)) {
+                display.setText(Long.toString(number.longValue()));
+            } else {
+                String parsedDecimal = Double.toString(number);
+                if (parsedDecimal.length() < parsedDecimal.indexOf('.') + 6) {
+                    display.setText(parsedDecimal);
+                } else {
+                    display.setText(parsedDecimal.substring(0, parsedDecimal.indexOf('.') + 6));
+                }
+            }
         }
     }
 
@@ -242,7 +291,6 @@ public class MainViewController {
     private void displayDigit(String digit) {
         if (newNumber) {
             display.setText(digit.substring(1));
-            newNumber = false;
         } else {
             display.appendText(digit.substring(1));
         }
