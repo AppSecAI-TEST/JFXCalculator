@@ -1,5 +1,7 @@
 package application;
 
+//TODO SIMPLE REMOVE LAMBDAS
+//TODO JAVADOC
 //TODO TO FUNCTIONAL
 
 import java.io.IOException;
