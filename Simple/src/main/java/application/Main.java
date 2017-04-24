@@ -16,18 +16,22 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import java.awt.Image;
+import javafx.scene.image.Image;
 import java.awt.Toolkit;
 
 import control.MainViewController;
 import expression.Expression;
 
+
+
 public class Main extends Application {
+
+    final public String os = System.getProperty("os.name");
 
     private Stage primaryStage;
 
     private Group root = new Group();
-    private Scene scene = new Scene(root);
+    private Scene scene;
 
     ///////////////////////////////////////////////
     private ObservableList<Expression> historyLogs =  FXCollections.observableArrayList();
@@ -41,8 +45,12 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         try {
-            Image image = Toolkit.getDefaultToolkit().getImage("src/main/resources/icon.png");
-            com.apple.eawt.Application.getApplication().setDockIconImage(image);
+            if (os.startsWith("Mac")) {
+                java.awt.Image image = Toolkit.getDefaultToolkit().getImage("src/main/resources/icon.png");
+                com.apple.eawt.Application.getApplication().setDockIconImage(image);
+            } else if (os.startsWith("Win")) {
+                primaryStage.getIcons().add(new Image("https://psv4.userapi.com/c810132/u212633253/docs/3a8d2f3adffc/icon.png"));
+            }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             System.err.println("[no dock icon found]");
@@ -54,6 +62,12 @@ public class Main extends Application {
 
         createMainView();
         createMenuBar();
+
+       if (os.startsWith("Mac")) {
+           scene = new Scene(root);
+       } else if (os.startsWith("Win")) {
+           scene = new Scene(root,227,423);
+       }
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -80,25 +94,22 @@ public class Main extends Application {
 
     private void createMenuBar() {
         ///////////////////////////////////
-        MenuBar menuBar = new MenuBar();
         Menu menu = new Menu("Menu");
 
         MenuItem history = new MenuItem("History");
-        history.setOnAction(actionEvent -> new History(historyLogs));
+        history.setOnAction(actionEvent -> new History(this,historyLogs));
 
         MenuItem close = new MenuItem("Close");
         close.setOnAction(actionEvent -> System.exit(0));
 
         menu.getItems().addAll(history, close);
-
         ////////////////////////////////////
+        MenuBar menuBar = new MenuBar();
         menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
         menuBar.getMenus().add(menu);
         ////////////////////////////////////
 
-        final String os = System.getProperty("os.name");
-
-        if (os != null && os.startsWith("Mac")) {
+        if (os.startsWith("Mac")) {
              menuBar.useSystemMenuBarProperty().set(true);
         }
 
