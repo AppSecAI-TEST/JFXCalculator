@@ -34,7 +34,7 @@ public class MainViewController {
         this.main = main;
 
         if (this.main.os.startsWith("Win")) {
-            display.setPadding(new Insets(30,0,0,0));
+            display.setPadding(new Insets(25,0,0,0));
         }
 
         display.setEditable(false);

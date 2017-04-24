@@ -66,7 +66,7 @@ public class Main extends Application {
        if (os.startsWith("Mac")) {
            scene = new Scene(root);
        } else if (os.startsWith("Win")) {
-           scene = new Scene(root,227,423);
+           scene = new Scene(root,227,418);
        }
 
         primaryStage.setScene(scene);
