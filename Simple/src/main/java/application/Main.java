@@ -9,12 +9,11 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import java.awt.Toolkit;
@@ -22,15 +21,13 @@ import java.awt.Toolkit;
 import control.MainViewController;
 import expression.Expression;
 
-
-
 public class Main extends Application {
 
-    final public String os = System.getProperty("os.name");
+    final String os = System.getProperty("os.name");
 
     private Stage primaryStage;
 
-    private Group root = new Group();
+    private BorderPane root = new BorderPane();
     private Scene scene;
 
     ///////////////////////////////////////////////
@@ -66,7 +63,7 @@ public class Main extends Application {
        if (os.startsWith("Mac")) {
            scene = new Scene(root);
        } else if (os.startsWith("Win")) {
-           scene = new Scene(root,227,418);
+           scene = new Scene(root,227,423);
        }
 
         primaryStage.setScene(scene);
@@ -84,7 +81,8 @@ public class Main extends Application {
             MainViewController controller = loader.getController();
             controller.setMainView(this);
 
-            root.getChildren().add(anchorPane);
+            root.setCenter(anchorPane);
+
         } catch (IOException | IllegalStateException e) {
             System.err.println(e.getMessage());
             System.err.println("[no MainView.fxml file found]");
@@ -110,10 +108,10 @@ public class Main extends Application {
         ////////////////////////////////////
 
         if (os.startsWith("Mac")) {
-             menuBar.useSystemMenuBarProperty().set(true);
+            menuBar.useSystemMenuBarProperty().set(true);
         }
 
-        root.getChildren().add(menuBar);
+        root.setTop(menuBar);
     }
 
     public static void main(String[] args) {

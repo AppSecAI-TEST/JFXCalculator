@@ -32,7 +32,6 @@ class History {
             scene = new Scene(root,390,388);
         }
 
-
         historyStage.setScene(scene);
         historyStage.show();
     }

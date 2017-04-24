@@ -32,11 +32,6 @@ public class MainViewController {
 
     public void setMainView(Main main) {
         this.main = main;
-
-        if (this.main.os.startsWith("Win")) {
-            display.setPadding(new Insets(25,0,0,0));
-        }
-
         display.setEditable(false);
         display.setText("0");
     }
