@@ -21,7 +21,7 @@ public class MainViewController {
     @FXML private TextArea display;
     @FXML private Button delete;
 
-    private boolean[] operations = new boolean[4];
+    private boolean[] operations = new boolean[5];
 
     private Double[] calculations = {0.0, 0.0};
 
@@ -115,11 +115,13 @@ public class MainViewController {
                 case "percent":
                     expression = parseNumber(Double.valueOf(display.getText())) + " / 100";
                     calculations[0] = Double.parseDouble(display.getText()) / 100;
-                    expResult = Double.toHexString(calculations[0]);
+                    expResult = Double.toString(calculations[0]);
 
                     if (firstOperation) {
                         main.addHistory(new Expression(expression, expResult));
                     }
+
+                    operations[4] = true;
                     break;
             }
         } catch (NumberFormatException e) {
@@ -177,7 +179,7 @@ public class MainViewController {
 
     @FXML
     public void handleEquals() {
-        double result = 0;
+        double result;
 
         try {
             calculations[1] = Double.parseDouble(display.getText());
@@ -208,6 +210,11 @@ public class MainViewController {
             result = calculations[0] / calculations[1];
 
             expression = parseNumber(calculations[0]) + " / " + parseNumber(calculations[1]);
+        } else if (operations[4]) {
+            operations[4] = false;
+            return;
+        } else {
+            return;
         }
 
         display.setText(parseNumber(result));
