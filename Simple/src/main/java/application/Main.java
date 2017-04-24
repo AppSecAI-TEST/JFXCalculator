@@ -1,6 +1,5 @@
 package application;
 
-//TODO SIMPLE REMOVE LAMBDAS
 //TODO JAVADOC
 //TODO TO FUNCTIONAL
 
@@ -10,6 +9,8 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
@@ -27,9 +28,11 @@ public class Main extends Application {
 
     final String os = System.getProperty("os.name");
 
-    private Stage primaryStage;
+    private Main main = this;
 
+    private Stage primaryStage;
     private BorderPane root = new BorderPane();
+
     private Scene scene;
 
     ///////////////////////////////////////////////
@@ -97,10 +100,20 @@ public class Main extends Application {
         Menu menu = new Menu("Menu");
 
         MenuItem history = new MenuItem("History");
-        history.setOnAction(actionEvent -> new History(this,historyLogs));
+        history.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                new History(main,historyLogs);
+            }
+        });
 
         MenuItem close = new MenuItem("Close");
-        close.setOnAction(actionEvent -> System.exit(0));
+        close.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(0);
+            }
+        });
 
         menu.getItems().addAll(history, close);
         ////////////////////////////////////

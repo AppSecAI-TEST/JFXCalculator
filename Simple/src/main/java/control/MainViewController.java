@@ -113,7 +113,13 @@ public class MainViewController {
                     operations[3] = true;
                     break;
                 case "percent":
+                    expression = parseNumber(Double.valueOf(display.getText())) + " / 100";
                     calculations[0] = Double.parseDouble(display.getText()) / 100;
+                    expResult = Double.toHexString(calculations[0]);
+
+                    if (firstOperation) {
+                        main.addHistory(new Expression(expression, expResult));
+                    }
                     break;
             }
         } catch (NumberFormatException e) {
