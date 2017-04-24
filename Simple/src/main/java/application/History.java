@@ -7,14 +7,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 class History {
     private ObservableList<Expression> historyLogs;
 
-    private Group group = new Group();
+    private Group root = new Group();
+    private Scene scene;
 
-    History(ObservableList<Expression> historyLogs) {
+    History(Main main, ObservableList<Expression> historyLogs) {
         this.historyLogs = historyLogs;
 
         Stage historyStage = new Stage();
@@ -23,7 +25,12 @@ class History {
 
         createHistoryView();
 
-        Scene scene = new Scene(group);
+        if (main.os.startsWith("Mac")) {
+            scene = new Scene(root);
+        } else if (main.os.startsWith("Win")) {
+            historyStage.getIcons().add(new Image("https://psv4.userapi.com/c810132/u212633253/docs/3a8d2f3adffc/icon.png"));
+            scene = new Scene(root,390,388);
+        }
 
         historyStage.setScene(scene);
         historyStage.show();
@@ -45,6 +52,6 @@ class History {
         tableView.setItems(historyLogs);
         tableView.getColumns().addAll(expressionTableColumn,resultTableColumn);
 
-        group.getChildren().add(tableView);
+        root.getChildren().add(tableView);
     }
 }

@@ -4,6 +4,7 @@ import java.util.IllegalFormatException;
 
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 
@@ -43,38 +44,38 @@ public class MainViewController {
         }
 
         Button btn = (Button) event.getSource();
-        String number_id = btn.getId();
+        String numberId = btn.getId();
 
-        switch(number_id) {
+        switch(numberId) {
             case "_0" :
-                displayDigit(number_id);
+                displayDigit(numberId);
                 break;
             case "_1" :
-                displayDigit(number_id);
+                displayDigit(numberId);
                 break;
             case "_2" :
-                displayDigit(number_id);
+                displayDigit(numberId);
                 break;
             case "_3" :
-                displayDigit(number_id);
+                displayDigit(numberId);
                 break;
             case "_4" :
-                displayDigit(number_id);
+                displayDigit(numberId);
                 break;
             case "_5" :
-                displayDigit(number_id);
+                displayDigit(numberId);
                 break;
             case "_6" :
-                displayDigit(number_id);
+                displayDigit(numberId);
                 break;
             case "_7" :
-                displayDigit(number_id);
+                displayDigit(numberId);
                 break;
             case "_8" :
-                displayDigit(number_id);
+                displayDigit(numberId);
                 break;
             case "_9" :
-                displayDigit(number_id);
+                displayDigit(numberId);
                 break;
             case "dot" :
                 if (display.getText().equals("")) {
