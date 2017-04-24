@@ -119,6 +119,7 @@ public class Main extends Application {
         ////////////////////////////////////
         MenuBar menuBar = new MenuBar();
         menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
+        menuBar.setPrefHeight(30);
         menuBar.getMenus().add(menu);
         ////////////////////////////////////
 
