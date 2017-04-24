@@ -119,12 +119,14 @@ public class Main extends Application {
         ////////////////////////////////////
         MenuBar menuBar = new MenuBar();
         menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
-        menuBar.setPrefHeight(30);
+
         menuBar.getMenus().add(menu);
         ////////////////////////////////////
 
         if (os.startsWith("Mac")) {
             menuBar.useSystemMenuBarProperty().set(true);
+        } else if (os.startsWith("Win")) {
+            menuBar.setPrefHeight(30);
         }
 
         root.setTop(menuBar);
