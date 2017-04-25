@@ -54,7 +54,7 @@ public class Main extends Application {
                 com.apple.eawt.Application.getApplication().setDockIconImage(image);
             } else if (os.startsWith("Win")) {
 
-                primaryStage.getIcons().add(new Image("src/main/resources/icon.png"));
+                primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("src/main/resources/icon.png")));
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
