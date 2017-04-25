@@ -1,7 +1,5 @@
 package application;
 
-//TODO TO FUNCTIONAL
-
 import java.io.IOException;
 
 import javafx.application.Application;
