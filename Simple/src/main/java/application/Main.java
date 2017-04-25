@@ -20,9 +20,11 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import java.awt.Toolkit;
+import java.net.URL;
 
 import control.MainViewController;
 import expression.Expression;
+import javafx.stage.WindowEvent;
 
 public class Main extends Application {
 
@@ -51,7 +53,8 @@ public class Main extends Application {
                 java.awt.Image image = Toolkit.getDefaultToolkit().getImage("src/main/resources/icon.png");
                 com.apple.eawt.Application.getApplication().setDockIconImage(image);
             } else if (os.startsWith("Win")) {
-                primaryStage.getIcons().add(new Image("https://psv4.userapi.com/c810132/u212633253/docs/3a8d2f3adffc/icon.png"));
+
+                primaryStage.getIcons().add(new Image("src/main/resources/icon.png"));
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -74,7 +77,12 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        primaryStage.setOnCloseRequest(actionEvent -> Platform.exit());
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                Platform.exit();
+            }
+        });
     }
 
     private void createMainView() {
