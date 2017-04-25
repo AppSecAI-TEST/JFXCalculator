@@ -48,19 +48,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        try {
-            if (os.startsWith("Mac")) {
-                java.awt.Image image = Toolkit.getDefaultToolkit().getImage("src/main/resources/icon.png");
-                com.apple.eawt.Application.getApplication().setDockIconImage(image);
-            } else if (os.startsWith("Win")) {
-
-                primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("src/main/resources/icon.png")));
-            }
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            System.err.println("[no dock icon found]");
-        }
-
         this.primaryStage = primaryStage;
         primaryStage.setResizable(false);
         primaryStage.setTitle("JFXCalculator");
@@ -68,14 +55,26 @@ public class Main extends Application {
         createMainView();
         createMenuBar();
 
-       if (os.startsWith("Mac")) {
-           scene = new Scene(root);
-       } else if (os.startsWith("Win")) {
-           scene = new Scene(root,227,423);
-       }
+        if (os.startsWith("Mac")) {
+            scene = new Scene(root);
+        } else if (os.startsWith("Win")) {
+            scene = new Scene(root,227,423);
+        }
 
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        try {
+            if (os.startsWith("Mac")) {
+                java.awt.Image image = Toolkit.getDefaultToolkit().getImage("src/main/resources/icon.png");
+                com.apple.eawt.Application.getApplication().setDockIconImage(image);
+            } else if (os.startsWith("Win")) {
+                primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("src/main/resources/icon.png")));
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            System.err.println("[no dock icon found]");
+        }
 
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
