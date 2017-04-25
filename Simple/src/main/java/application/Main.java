@@ -62,7 +62,6 @@ public class Main extends Application {
         }
 
         primaryStage.setScene(scene);
-        primaryStage.show();
 
         try {
             if (os.startsWith("Mac")) {
@@ -75,6 +74,8 @@ public class Main extends Application {
             System.err.println(e.getMessage());
             System.err.println("[no dock icon found]");
         }
+
+        primaryStage.show();
 
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
