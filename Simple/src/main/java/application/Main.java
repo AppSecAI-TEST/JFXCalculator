@@ -66,7 +66,7 @@ public class Main extends Application {
         //Загрузка иконки приложения
         try {
             if (os.startsWith("Mac")) {
-                java.awt.Image image = Toolkit.getDefaultToolkit().getImage("/Users/Dmitry/GitHub/JavaFX Calculator/Simple/target/classes/icon.png");
+                java.awt.Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icon.png"));
                 com.apple.eawt.Application.getApplication().setDockIconImage(image);
             } else if (os.startsWith("Win")) {
                 this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
@@ -158,7 +158,6 @@ public class Main extends Application {
         menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
 
         menuBar.getMenus().add(menu);
-
 
         if (os.startsWith("Mac")) {
             menuBar.useSystemMenuBarProperty().set(true);
