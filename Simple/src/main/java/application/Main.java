@@ -1,6 +1,5 @@
 package application;
 
-//TODO JAVADOC
 //TODO TO FUNCTIONAL
 
 import java.io.IOException;
@@ -20,12 +19,17 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import java.awt.Toolkit;
-import java.net.URL;
 
 import control.MainViewController;
 import expression.Expression;
 import javafx.stage.WindowEvent;
 
+/**
+ * Главное окно приложения
+ *
+ * Класс является главным окном калькулятора, содержащее {@code MenuBar}
+ * и основные элементы управления калькулятором: {@code AnchorPane(TextArea,Grid)}
+ */
 public class Main extends Application {
 
     final String os = System.getProperty("os.name");
@@ -37,14 +41,21 @@ public class Main extends Application {
 
     private Scene scene;
 
-    ///////////////////////////////////////////////
+    //История вычислений
     private ObservableList<Expression> historyLogs =  FXCollections.observableArrayList();
 
     public void addHistory(Expression expression) {
         historyLogs.add(expression);
     }
-    ////////////////////////////////////////////////
 
+    /**
+     * Точка входа в JavaFx приложение
+     *
+     * Метод загружает основные элементы приложения и их controller'ы
+     * {@link #createMainView()}, {@link #createMenuBar()}
+     *
+     * @param primaryStage Окно
+     */
     @Override
     public void start(Stage primaryStage) {
 
@@ -52,9 +63,23 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.setTitle("JFXCalculator");
 
+        //Загрузка иконки приложения
+        try {
+            if (os.startsWith("Mac")) {
+                java.awt.Image image = Toolkit.getDefaultToolkit().getImage("/Users/Dmitry/GitHub/JavaFX Calculator/Simple/target/classes/icon.png");
+                com.apple.eawt.Application.getApplication().setDockIconImage(image);
+            } else if (os.startsWith("Win")) {
+                this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            System.err.println("[no dock icon found]");
+        }
+
         createMainView();
         createMenuBar();
 
+        //Размеры Scene в зависимости от OS
         if (os.startsWith("Mac")) {
             scene = new Scene(root);
         } else if (os.startsWith("Win")) {
@@ -62,21 +87,9 @@ public class Main extends Application {
         }
 
         primaryStage.setScene(scene);
-
-        try {
-            if (os.startsWith("Mac")) {
-                java.awt.Image image = Toolkit.getDefaultToolkit().getImage("src/main/resources/icon.png");
-                com.apple.eawt.Application.getApplication().setDockIconImage(image);
-            } else if (os.startsWith("Win")) {
-                this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("src/main/resources/icon.png")));
-            }
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            System.err.println("[no dock icon found]");
-        }
-
         primaryStage.show();
 
+        //Закрыть остальные окна по закрытию главного
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
@@ -85,14 +98,21 @@ public class Main extends Application {
         });
     }
 
+    /**
+     * Загрузка основных элементов калькулятора
+     *
+     * Стиль и расположение элементов в {@code AnchorPane} загружается с {@code fxml} файла.
+     * Функционал передается {@code MainViewController}.
+     */
     private void createMainView() {
         try {
+            //Загрузка Fxml файла(отображение и логика)
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/MainView.fxml"));
 
             AnchorPane anchorPane = loader.load();
 
             MainViewController controller = loader.getController();
-            controller.setMainView(this);
+            controller.setDisplay(this);
 
             root.setCenter(anchorPane);
 
@@ -103,10 +123,17 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Загрузка {@code MenuBar}
+     *
+     * Загурзка меню-бара и добавление пунктов, подпунктов и действий по нажатию на них
+     */
     private void createMenuBar() {
-        ///////////////////////////////////
+
+        //Пункт на панели меню
         Menu menu = new Menu("Menu");
 
+        //Подпункты пункта Menu и что делать по их нажатию
         MenuItem history = new MenuItem("History");
         history.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -123,13 +150,15 @@ public class Main extends Application {
             }
         });
 
+        //Сбор подпунктов в пункт
         menu.getItems().addAll(history, close);
-        ////////////////////////////////////
+
+        //Создание MenuBar и добавление в него пунтка
         MenuBar menuBar = new MenuBar();
         menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
 
         menuBar.getMenus().add(menu);
-        ////////////////////////////////////
+
 
         if (os.startsWith("Mac")) {
             menuBar.useSystemMenuBarProperty().set(true);
@@ -140,6 +169,9 @@ public class Main extends Application {
         root.setTop(menuBar);
     }
 
+    /**
+     * Запуск приложения
+     */
     public static void main(String[] args) {
         Main.launch(args);
     }
