@@ -68,7 +68,7 @@ public class Main extends Application {
                 java.awt.Image image = Toolkit.getDefaultToolkit().getImage("src/main/resources/icon.png");
                 com.apple.eawt.Application.getApplication().setDockIconImage(image);
             } else if (os.startsWith("Win")) {
-                primaryStage.getIcons().add(new Image("http://i.imgur.com/eQY9l3f.png"));
+                this.primaryStage.getIcons().add(new Image("http://i.imgur.com/eQY9l3f.png"));
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
