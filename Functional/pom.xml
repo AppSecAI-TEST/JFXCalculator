@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>groupId</groupId>
-    <artifactId>JFXCalculator_simple</artifactId>
+    <artifactId>JFXCalculator_functional</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
@@ -36,7 +36,7 @@
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <outputDirectory>${basedir}</outputDirectory>
-                    <finalName>JFXCalculator_simple</finalName>
+                    <finalName>JFXCalculator_functional</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>

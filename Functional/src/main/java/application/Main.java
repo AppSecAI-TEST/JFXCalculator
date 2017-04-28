@@ -32,8 +32,6 @@ public class Main extends Application {
 
     final String os = System.getProperty("os.name");
 
-    private Main main = this;
-
     private Stage primaryStage;
     private BorderPane root = new BorderPane();
 
@@ -88,12 +86,7 @@ public class Main extends Application {
         primaryStage.show();
 
         //Закрыть остальные окна по закрытию главного
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                Platform.exit();
-            }
-        });
+        primaryStage.setOnCloseRequest(event -> Platform.exit());
     }
 
     /**
@@ -133,20 +126,10 @@ public class Main extends Application {
 
         //Подпункты пункта Menu и что делать по их нажатию
         MenuItem history = new MenuItem("History");
-        history.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                new History(main,historyLogs);
-            }
-        });
+        history.setOnAction(event -> new History(this,historyLogs));
 
         MenuItem close = new MenuItem("Close");
-        close.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.exit(0);
-            }
-        });
+        close.setOnAction(event -> System.exit(0));
 
         //Сбор подпунктов в пункт
         menu.getItems().addAll(history, close);
