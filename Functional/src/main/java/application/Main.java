@@ -103,7 +103,7 @@ public class Main extends Application {
             AnchorPane anchorPane = loader.load();
 
             MainViewController controller = loader.getController();
-            controller.setDisplay(this);
+            controller.setDisplay();
 
             root.setCenter(anchorPane);
 

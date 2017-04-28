@@ -1,12 +1,12 @@
 package control;
 
 //TODO HISTORY
-//TODO REMOVE SWITCH AND IF
 //TODO HIGHER ORDER ?
 
 import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import javafx.event.Event;
@@ -14,14 +14,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 
-import application.Main;
-import oracle.jvm.hotspot.jfr.Producer;
-
 /**
  * Логика обработки взаимодействий с {@code GUI} калькулятора
  *
  * Класс берет на себя управление элементами графического интерфейса, с fxml документом.
- * {@link #handleDigit(Event)} выодит нажатые цифры на экран, {@link #handleOperation(Event)} производит необходимое
+ * {@link #handleDigit(Event)} выодит нажатые цифры на экран, {@link #handleBinaryOperation(Event)} производит необходимое
  * действие над числами и др.
  */
 public class MainViewController {
@@ -29,7 +26,6 @@ public class MainViewController {
     //Хранят операции и их результаты
 //    private String expResult;
 //    private String expression;
-
 
     //Элементы GUI с fxml док-та
     @FXML private TextArea display;
@@ -43,12 +39,29 @@ public class MainViewController {
     //Сохранение рез-в.
     private double[] calculations = {0.0, 0.0};
 
-    //Замена свичу с нажатием цифр
-    private Map<String, Consumer<Integer>> switchMap = new HashMap<String, Consumer<Integer>>() {
-        {
-            //put("_0",(x) -> displayDigit(x));
+    //Замена свичу с нажатием операций
+    private Map<String, Supplier<Double>> binaryOperationsMap = new HashMap<String, Supplier<Double>>() {
+        {   put("÷",  () -> { current = (n1,n2) ->  n1 / n2;
+                              return preformBinaryOperation(last);  });
+            put("×",  () -> { current = (n1,n2) ->  n1 * n2;
+                              return preformBinaryOperation(last);  });
+            put("-",  () -> { current = (n1,n2) ->  n1 - n2;
+                              return preformBinaryOperation(last);  });
+            put("+",  () -> { current = (n1,n2) ->  n1 + n2;
+                              return preformBinaryOperation(last);  });
+            put("=",  () ->   preformBinaryOperation(current));
         }
     };
+
+    private Map<String, Supplier<Double>> unaryOperationsMap = new HashMap<String, Supplier<Double>>() {
+        {
+            put("sign",  () ->   preformUnaryOperation(n1 -> n1 * (-1)));
+            put("percent",() ->   preformUnaryOperation(n1 -> n1 / 100));
+        }
+    };
+
+    //Замена свичу с нажатием цифр
+    private Consumer<String> consumer = (x) -> displayDigit(x);
 
     //Новое число или все еще цифра
     private boolean newNumber = false;
@@ -56,7 +69,7 @@ public class MainViewController {
     /**
      * Настройка экрана вывода
      */
-    public void setDisplay(Main main) {
+    public void setDisplay() {
         display.setEditable(false);
         display.setText("0");
     }
@@ -68,55 +81,24 @@ public class MainViewController {
      */
     @FXML
     public void handleDigit(Event event){
+
+        Button btn = (Button) event.getSource();
+
         //Не позволяет 0(0)
         if (display.getText().equals("0")){
             delete.setText("C");
             display.setText("");
         }
-
-        Button btn = (Button) event.getSource();
-        String numberId = btn.getId();
-
-        switch(numberId) {
-            case "_0" :
-                displayDigit(numberId);
-                break;
-            case "_1" :
-                displayDigit(numberId);
-                break;
-            case "_2" :
-                displayDigit(numberId);
-                break;
-            case "_3" :
-                displayDigit(numberId);
-                break;
-            case "_4" :
-                displayDigit(numberId);
-                break;
-            case "_5" :
-                displayDigit(numberId);
-                break;
-            case "_6" :
-                displayDigit(numberId);
-                break;
-            case "_7" :
-                displayDigit(numberId);
-                break;
-            case "_8" :
-                displayDigit(numberId);
-                break;
-            case "_9" :
-                displayDigit(numberId);
-                break;
-            case "dot" :
-                if (display.getText().equals("")) {
-                    display.setText("0.");
-                }
-                else if (!display.getText().contains(".")) {
-                    display.appendText(".");
-                }
-                break;
+        //Вывод точки т.к с ней особая ситуация
+        if (btn.getText().equals(".")) {
+            if (!newNumber) display.setText("0.");
+            else if (!display.getText().contains(".")) display.appendText(".");
+            newNumber = false;
+            return;
         }
+
+        consumer.accept(btn.getText());
+
         newNumber = false;
     }
 
@@ -126,47 +108,18 @@ public class MainViewController {
      * @param event нажатая кнопка
      */
     @FXML
-    public void handleOperation(Event event) {
+    public void handleBinaryOperation(Event event) {
         Button btn = (Button) event.getSource();
-        String operation = btn.getId();
-
-        try {
-            switch (operation) {
-                case "plus":
-                    current = (n1,n2) ->  n1 + n2;
-                    preformBinaryOperation(last);
-                    break;
-                case "minus":
-                    current = (n1,n2) ->  n1 - n2;
-                    preformBinaryOperation(last);
-                    break;
-                case "multiply":
-                    current = (n1,n2) ->  n1 * n2;
-                    preformBinaryOperation(last);
-                    break;
-                case "division":
-                    current = (n1,n2) ->  n1 / n2;
-                    preformBinaryOperation(last);
-                    break;
-                case "percent":
-                    preformUnaryOperation(n1 -> n1 / 100);
-                    return;
-                case "sign" :
-                    preformUnaryOperation(n1 -> n1 * (-1));
-                    return;
-                case "equals":
-                    preformBinaryOperation(current);
-                    break;
-            }
-        } catch (NumberFormatException e) {
-            display.setText("Error");
-            System.err.println(e.getMessage());
-            System.err.println("[wrong numeric format]");
-        }
-
+        calculations[0] = binaryOperationsMap.get(btn.getText()).get();
         display.setText(parseNumber(calculations[0]));
-
         newNumber = true;
+    }
+
+    @FXML
+    public void handleUnaryOperation(Event event) {
+        Button btn = (Button) event.getSource();
+        calculations[1] = unaryOperationsMap.get(btn.getId()).get();
+        display.setText(parseNumber(calculations[1]));
     }
 
     @FXML
@@ -186,26 +139,18 @@ public class MainViewController {
     /**
      * Производит унарную операцию с данными.
      */
-    private void preformUnaryOperation(UnaryOperator<Double> operator) {
-        calculations[1] = operator.apply(Double.valueOf(display.getText()));
-        display.setText(parseNumber(calculations[1]));
+    private Double preformUnaryOperation(UnaryOperator<Double> operator) {
+        return operator.apply(Double.valueOf(display.getText()));
     }
 
     /**
      * Производит бинарную операцию с введенными данными.
      *
-     * Метод вызывается из {@link #handleOperation(Event)} и непосредственно выполняет расчеты.
+     * Метод вызывается из {@link #handleBinaryOperation(Event)} и непосредственно выполняет расчеты.
      */
-    private void preformBinaryOperation(BinaryOperator<Double> operator) {
-       try {
-           calculations[0] = operator.apply(calculations[0],Double.parseDouble(display.getText()));
+    private Double preformBinaryOperation(BinaryOperator<Double> operator) {
            last = current;
-
-       } catch (IllegalFormatException e) {
-           display.setText("Error");
-           System.err.println(e.getMessage());
-           System.err.println("[wrong numeric format]");
-       }
+           return operator.apply(calculations[0],Double.parseDouble(display.getText()));
     }
 
     /**
@@ -231,10 +176,7 @@ public class MainViewController {
      * @param digit Кнопка, которой соответсвует цифра
      */
     private void displayDigit(String digit) {
-        if (newNumber) {
-            display.setText(digit.substring(1));
-        } else {
-            display.appendText(digit.substring(1));
-        }
+        if (newNumber) display.setText(digit);
+        else display.appendText(digit);
     }
 }

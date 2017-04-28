@@ -64,30 +64,30 @@
                     minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDelete"
                     prefHeight="59.0" prefWidth="59.0" styleClass="topOperations" text="AC"/>
             <Button fx:id="sign" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOperation"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleUnaryOperation"
                     prefHeight="59.0" prefWidth="59.0" styleClass="topOperations" text="±"
                     GridPane.columnIndex="1"/>
             <Button fx:id="percent" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOperation"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleUnaryOperation"
                     prefHeight="59.0" prefWidth="59.0" styleClass="topOperations" text="\%"
                     GridPane.columnIndex="2"/>
             <Button fx:id="division" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOperation"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBinaryOperation"
                     prefHeight="59.0" prefWidth="59.0" styleClass="operations" text="÷" GridPane.columnIndex="3"/>
             <Button fx:id="multiply" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOperation"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBinaryOperation"
                     prefHeight="59.0" prefWidth="59.0" styleClass="operations" text="×" GridPane.columnIndex="3"
                     GridPane.rowIndex="1"/>
             <Button fx:id="minus" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOperation"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBinaryOperation"
                     prefHeight="59.0" prefWidth="59.0" styleClass="operations" text="-" GridPane.columnIndex="3"
                     GridPane.rowIndex="2"/>
             <Button fx:id="plus" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOperation"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBinaryOperation"
                     prefHeight="59.0" prefWidth="59.0" styleClass="operations" text="+" GridPane.columnIndex="3"
                     GridPane.rowIndex="3"/>
             <Button fx:id="equals" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOperation"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBinaryOperation"
                     prefHeight="59.0" prefWidth="59.0" styleClass="operations" text="=" GridPane.columnIndex="3"
                     GridPane.rowIndex="4"/>
         </GridPane>
