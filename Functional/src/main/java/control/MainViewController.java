@@ -1,14 +1,14 @@
 package control;
 
 //TODO HISTORY
-//TODO HIGHER ORDER ?
+//TODO FUNCTIONS
+//TODO LIFT UP TO HIGHER ORDER
 
 import java.util.*;
-import java.util.function.BinaryOperator;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
+import java.util.function.*;
+import java.util.stream.Stream;
 
+import application.Main;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -23,17 +23,21 @@ import javafx.scene.control.TextArea;
  */
 public class MainViewController {
 
-    //Хранят операции и их результаты
-//    private String expResult;
-//    private String expression;
+    private Main main;
+    private String expResult;
+    private String expression;
+
+    //Новое число или все еще цифра
+    private boolean newNumber = false;
 
     //Элементы GUI с fxml док-та
     @FXML private TextArea display;
-    @FXML private Button delete;
 
+    @FXML private Button delete;
     //Фактически нажатие на кнопку операции -> выполнить предыдущею
     //Поэтому выполняем предыдущею, и сохраняем текущею в предыдущею
     private BinaryOperator<Double> last = (n1, n2) -> n2;
+
     private BinaryOperator<Double> current = last;
 
     //Сохранение рез-в.
@@ -60,16 +64,24 @@ public class MainViewController {
         }
     };
 
-    //Замена свичу с нажатием цифр
-    private Consumer<String> consumer = (x) -> displayDigit(x);
+    private Function<Double, String> numberParser = (number) ->
+            number == Math.floor(number) && Double.isFinite(number) ?
+                    Long.toString(number.longValue()) : Double.toString(number);
 
-    //Новое число или все еще цифра
-    private boolean newNumber = false;
+
+    private Consumer<String> displayDigit = (digit) -> {
+        if (newNumber) display.setText(digit);
+        else           display.appendText(digit);
+    };
+
+    //Замена свичу с нажатием цифр
+    private Consumer<String> digitPressed = (x) -> displayDigit.accept(x);
 
     /**
      * Настройка экрана вывода
      */
-    public void setDisplay() {
+    public void setDisplay(Main main) {
+        this.main = main;
         display.setEditable(false);
         display.setText("0");
     }
@@ -84,21 +96,18 @@ public class MainViewController {
 
         Button btn = (Button) event.getSource();
 
+        //Вывод точки т.к с ней особая ситуация
+        if (btn.getText().equals(".")) {
+            if (!display.getText().contains(".")) display.appendText(".");
+            return;
+        }
+
         //Не позволяет 0(0)
         if (display.getText().equals("0")){
             delete.setText("C");
             display.setText("");
         }
-        //Вывод точки т.к с ней особая ситуация
-        if (btn.getText().equals(".")) {
-            if (!newNumber) display.setText("0.");
-            else if (!display.getText().contains(".")) display.appendText(".");
-            newNumber = false;
-            return;
-        }
-
-        consumer.accept(btn.getText());
-
+        digitPressed.accept(btn.getText());
         newNumber = false;
     }
 
@@ -111,7 +120,7 @@ public class MainViewController {
     public void handleBinaryOperation(Event event) {
         Button btn = (Button) event.getSource();
         calculations[0] = binaryOperationsMap.get(btn.getText()).get();
-        display.setText(parseNumber(calculations[0]));
+        display.setText(numberParser.apply(calculations[0]));
         newNumber = true;
     }
 
@@ -119,7 +128,7 @@ public class MainViewController {
     public void handleUnaryOperation(Event event) {
         Button btn = (Button) event.getSource();
         calculations[1] = unaryOperationsMap.get(btn.getId()).get();
-        display.setText(parseNumber(calculations[1]));
+        display.setText(numberParser.apply(calculations[1]));
     }
 
     @FXML
@@ -135,7 +144,7 @@ public class MainViewController {
 
         newNumber = false;
     }
-
+    
     /**
      * Производит унарную операцию с данными.
      */
@@ -151,32 +160,5 @@ public class MainViewController {
     private Double preformBinaryOperation(BinaryOperator<Double> operator) {
            last = current;
            return operator.apply(calculations[0],Double.parseDouble(display.getText()));
-    }
-
-    /**
-     * Вывод числа на экран.
-     *
-     * Метод проверяет имеет ли полученный {@code Double} дробную часть.
-     * Если дробная часть отсутсвует, то число выводится без нее (Прим: 322).
-     *
-     * @param number Double число, которое следует подготовить к выводу
-     * @return  Обработанное строковое представление полученного числа
-     */
-    private String parseNumber(Double number) {
-        if (number == Math.floor(number) && Double.isFinite(number)) {
-            return Long.toString(number.longValue());
-        } else {
-            return Double.toString(number);
-        }
-    }
-
-    /**
-     * Выводит цифру на экран
-     *
-     * @param digit Кнопка, которой соответсвует цифра
-     */
-    private void displayDigit(String digit) {
-        if (newNumber) display.setText(digit);
-        else display.appendText(digit);
     }
 }
