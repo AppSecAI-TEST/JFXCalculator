@@ -1,14 +1,10 @@
 package control;
 
-//TODO HISTORY
-//TODO FUNCTIONS
-//TODO LIFT UP TO HIGHER ORDER
-
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.Stream;
 
 import application.Main;
+import expression.Expression;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -18,14 +14,14 @@ import javafx.scene.control.TextArea;
  * Логика обработки взаимодействий с {@code GUI} калькулятора
  *
  * Класс берет на себя управление элементами графического интерфейса, с fxml документом.
- * {@link #handleDigit(Event)} выодит нажатые цифры на экран, {@link #handleBinaryOperation(Event)} производит необходимое
+ * {@link #handleDigit(Event)} выодит нажатые цифры на экран, {@link #handleBinaryOperation(Event), {@link #handleUnaryOperation(Event)}} производят необходимое
  * действие над числами и др.
  */
 public class MainViewController {
 
     private Main main;
-    private String expResult;
-    private String expression;
+    private String expression = "";
+    private String operation = "";
 
     //Новое число или все еще цифра
     private boolean newNumber = false;
@@ -46,36 +42,40 @@ public class MainViewController {
     //Замена свичу с нажатием операций
     private Map<String, Supplier<Double>> binaryOperationsMap = new HashMap<String, Supplier<Double>>() {
         {   put("÷",  () -> { current = (n1,n2) ->  n1 / n2;
-                              return preformBinaryOperation(last);  });
+                              operation = "/";
+                              return preformBinaryOperation.apply(last);  });
             put("×",  () -> { current = (n1,n2) ->  n1 * n2;
-                              return preformBinaryOperation(last);  });
+                              operation = "×";
+                              return preformBinaryOperation.apply(last);  });
             put("-",  () -> { current = (n1,n2) ->  n1 - n2;
-                              return preformBinaryOperation(last);  });
+                              operation = "-";
+                              return preformBinaryOperation.apply(last);  });
             put("+",  () -> { current = (n1,n2) ->  n1 + n2;
-                              return preformBinaryOperation(last);  });
-            put("=",  () ->   preformBinaryOperation(current));
+                              operation = "+";
+                              return preformBinaryOperation.apply(last);  });
+            put("=",  () ->          preformBinaryOperation.apply(current) );
         }
     };
-
     private Map<String, Supplier<Double>> unaryOperationsMap = new HashMap<String, Supplier<Double>>() {
-        {
-            put("sign",  () ->   preformUnaryOperation(n1 -> n1 * (-1)));
-            put("percent",() ->   preformUnaryOperation(n1 -> n1 / 100));
+        {   //            () -> n1 -> n1 * (-1)); Функции высшего порядка
+            put("sign",   () ->   preformUnaryOperation.apply(n1 -> n1 * (-1)));
+            put("percent",() ->   preformUnaryOperation.apply(n1 -> n1 / 100));
         }
     };
 
-    private Function<Double, String> numberParser = (number) ->
-            number == Math.floor(number) && Double.isFinite(number) ?
-                    Long.toString(number.longValue()) : Double.toString(number);
-
-
-    private Consumer<String> displayDigit = (digit) -> {
-        if (newNumber) display.setText(digit);
-        else           display.appendText(digit);
+    private Function<Double, String> numberParser = (number) -> {
+        if (number == Math.floor(number) && Double.isFinite(number)) return Long.toString(number.longValue());
+        else {
+            String num = Double.toString(number);
+            String dec = num.substring(num.indexOf('.'), num.length());
+            if (dec.length() < 7)
+                return num;
+            else {
+                String i = num.substring(0, num.indexOf('.'));
+                return i + dec.substring(0, 7);
+            }
+        }
     };
-
-    //Замена свичу с нажатием цифр
-    private Consumer<String> digitPressed = (x) -> displayDigit.accept(x);
 
     /**
      * Настройка экрана вывода
@@ -86,11 +86,33 @@ public class MainViewController {
         display.setText("0");
     }
 
+    @FXML
+    public void handleDelete() {
+        //restores default state
+        delete.setText("AC");
+        display.setText("0");
+
+        operation  = "";
+        expression = "";
+
+        calculations = Arrays.stream(calculations).parallel().map(value -> 0.0).toArray();
+
+        last = (n1, n2) -> n2;
+        current = last;
+
+        newNumber = false;
+    }
+
     /**
-     * Обработка нажатия цифры
+     * Выводит цифру на экран
      *
-     * @param event нажатая кнопка
+     * Вызывается из {@link #handleDigit(Event)} /
      */
+    private Consumer<String> displayDigit = (digit) -> {
+        if (newNumber) display.setText(digit);
+        else           display.appendText(digit);
+    };
+
     @FXML
     public void handleDigit(Event event){
 
@@ -107,58 +129,61 @@ public class MainViewController {
             delete.setText("C");
             display.setText("");
         }
-        digitPressed.accept(btn.getText());
+        displayDigit.accept(btn.getText());
         newNumber = false;
-    }
-
-    /**
-     * Обработка операций
-     *
-     * @param event нажатая кнопка
-     */
-    @FXML
-    public void handleBinaryOperation(Event event) {
-        Button btn = (Button) event.getSource();
-        calculations[0] = binaryOperationsMap.get(btn.getText()).get();
-        display.setText(numberParser.apply(calculations[0]));
-        newNumber = true;
-    }
-
-    @FXML
-    public void handleUnaryOperation(Event event) {
-        Button btn = (Button) event.getSource();
-        calculations[1] = unaryOperationsMap.get(btn.getId()).get();
-        display.setText(numberParser.apply(calculations[1]));
-    }
-
-    @FXML
-    public void handleDelete() {
-        //restores default state
-        delete.setText("AC");
-        display.setText("0");
-
-        calculations = Arrays.stream(calculations).parallel().map(value -> 0.0).toArray();
-
-        last = (n1, n2) -> n2;
-        current = last;
-
-        newNumber = false;
-    }
-    
-    /**
-     * Производит унарную операцию с данными.
-     */
-    private Double preformUnaryOperation(UnaryOperator<Double> operator) {
-        return operator.apply(Double.valueOf(display.getText()));
     }
 
     /**
      * Производит бинарную операцию с введенными данными.
      *
-     * Метод вызывается из {@link #handleBinaryOperation(Event)} и непосредственно выполняет расчеты.
+     * Вызывается из {@link #handleBinaryOperation(Event)} и непосредственно выполняет расчеты.
      */
-    private Double preformBinaryOperation(BinaryOperator<Double> operator) {
-           last = current;
-           return operator.apply(calculations[0],Double.parseDouble(display.getText()));
+    private Function<BinaryOperator<Double>, Double> preformBinaryOperation =
+            operator -> operator.apply(calculations[0],Double.parseDouble(display.getText()));
+    @FXML
+    public void handleBinaryOperation(Event event) {
+        Button btn = (Button) event.getSource();
+
+        if (!operation.isEmpty())
+        expression = numberParser.apply(calculations[0]) + " " + operation + " " + display.getText();
+
+        calculations[0] = binaryOperationsMap.get(btn.getText()).get();
+        display.setText(numberParser.apply(calculations[0]));
+
+        if (!expression.isEmpty())
+        main.addHistory(new Expression(expression, numberParser.apply(calculations[0])));
+
+        if (btn.getText().equals("=")) {
+            operation  = "";
+            expression = "";
+            last = (n1, n2) -> n2;
+            current = last;
+        } else {
+            newNumber = true;
+            last = current;
+        }
+    }
+
+    /**
+     * Производит унарную операцию с данными.
+     *
+     * Вызывается из {@link #handleUnaryOperation(Event)} (Event)} и непосредственно выполняет расчеты.
+     */
+    private Function<UnaryOperator<Double>, Double> preformUnaryOperation =
+            operator -> operator.apply(Double.valueOf(display.getText()));
+    @FXML
+    public void handleUnaryOperation(Event event) {
+        Button btn = (Button) event.getSource();
+
+        if (btn.getId().equals("percent"))
+        expression = display.getText();
+
+        calculations[1] = unaryOperationsMap.get(btn.getId()).get();
+        display.setText(numberParser.apply(calculations[1]));
+
+        if (btn.getId().equals("percent")) {
+            expression += " / " + 100;
+            main.addHistory(new Expression(expression, numberParser.apply(calculations[1])));
+        }
     }
 }

@@ -6,8 +6,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
@@ -20,7 +18,6 @@ import java.awt.Toolkit;
 
 import control.MainViewController;
 import expression.Expression;
-import javafx.stage.WindowEvent;
 
 /**
  * Главное окно приложения
