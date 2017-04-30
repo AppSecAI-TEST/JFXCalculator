@@ -63,20 +63,14 @@ public class MainViewController {
         }
     };
 
-    private Function<Double, String> numberParser = (number) -> {
-        if (number == Math.floor(number) && Double.isFinite(number)) return Long.toString(number.longValue());
-        else {
-            String num = Double.toString(number);
-            String dec = num.substring(num.indexOf('.'), num.length());
-            if (dec.length() < 7)
-                return num;
-            else {
-                String i = num.substring(0, num.indexOf('.'));
-                return i + dec.substring(0, 7);
-            }
-        }
-    };
-
+    private Function<Double, String> numberParser = (number) ->
+            number == Math.floor(number) && Double.isFinite(number) ? Long.toString(number.longValue()) :
+            Double.toString(number).substring(0,Double.toString(number).indexOf('.'))
+                 + Double.toString(number).substring(Double.toString(number).indexOf('.'))
+                                          .chars()
+                                          .limit(7)
+                                          .collect(StringBuilder::new,StringBuilder::appendCodePoint, StringBuilder::append)
+                                          .toString();
     /**
      * Настройка экрана вывода
      */

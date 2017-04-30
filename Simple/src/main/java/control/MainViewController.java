@@ -253,7 +253,6 @@ public class MainViewController {
         newNumber = true;
     }
 
-
     /**
      * Производит операцию с введенными данными.
      *
@@ -305,7 +304,14 @@ public class MainViewController {
         if (number == Math.floor(number) && Double.isFinite(number)) {
             return Long.toString(number.longValue());
         } else {
-            return Double.toString(number);
+            String num = Double.toString(number);
+            String dec = num.substring(num.indexOf('.'), num.length());
+            if (dec.length() < 7)
+                return num;
+            else {
+                String i = num.substring(0, num.indexOf('.'));
+                return i + dec.substring(0, 7);
+            }
         }
     }
 
