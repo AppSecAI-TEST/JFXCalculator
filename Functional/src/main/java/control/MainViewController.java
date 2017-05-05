@@ -43,23 +43,23 @@ public class MainViewController {
     private Map<String, Supplier<Double>> binaryOperationsMap = new HashMap<String, Supplier<Double>>() {
         {   put("÷",  () -> { current = (n1,n2) ->  n1 / n2;
                               operation = "/";
-                              return preformBinaryOperation.apply(last);  });
+                              return preformBinaryOperation.apply(last, display.getText());  });
             put("×",  () -> { current = (n1,n2) ->  n1 * n2;
                               operation = "×";
-                              return preformBinaryOperation.apply(last);  });
+                              return preformBinaryOperation.apply(last, display.getText());  });
             put("-",  () -> { current = (n1,n2) ->  n1 - n2;
                               operation = "-";
-                              return preformBinaryOperation.apply(last);  });
+                              return preformBinaryOperation.apply(last, display.getText());  });
             put("+",  () -> { current = (n1,n2) ->  n1 + n2;
                               operation = "+";
-                              return preformBinaryOperation.apply(last);  });
-            put("=",  () ->          preformBinaryOperation.apply(current) );
+                              return preformBinaryOperation.apply(last, display.getText());  });
+            put("=",  () ->          preformBinaryOperation.apply(current, display.getText()) );
         }
     };
     private Map<String, Supplier<Double>> unaryOperationsMap = new HashMap<String, Supplier<Double>>() {
         {   //            () -> n1 -> n1 * (-1)); Функции высшего порядка
-            put("sign",   () ->   preformUnaryOperation.apply(n1 -> n1 * (-1)));
-            put("percent",() ->   preformUnaryOperation.apply(n1 -> n1 / 100));
+            put("sign",   () ->   preformUnaryOperation.apply(n1 -> n1 * (-1), display.getText()));
+            put("percent",() ->   preformUnaryOperation.apply(n1 -> n1 / 100, display.getText()));
         }
     };
 
@@ -100,13 +100,8 @@ public class MainViewController {
     /**
      * Выводит цифру на экран
      *
-     * Вызывается из {@link #handleDigit(Event)} /
+     *
      */
-    private Consumer<String> displayDigit = (digit) -> {
-        if (newNumber) display.setText(digit);
-        else           display.appendText(digit);
-    };
-
     @FXML
     public void handleDigit(Event event){
 
@@ -123,7 +118,10 @@ public class MainViewController {
             delete.setText("C");
             display.setText("");
         }
-        displayDigit.accept(btn.getText());
+
+        if (newNumber) display.setText(btn.getText());
+        else display.appendText(btn.getText());
+
         newNumber = false;
     }
 
@@ -132,8 +130,8 @@ public class MainViewController {
      *
      * Вызывается из {@link #handleBinaryOperation(Event)} и непосредственно выполняет расчеты.
      */
-    private Function<BinaryOperator<Double>, Double> preformBinaryOperation =
-            operator -> operator.apply(calculations[0],Double.parseDouble(display.getText()));
+    private BiFunction<BinaryOperator<Double>, String, Double> preformBinaryOperation =
+            (operator, displayText) -> operator.apply(calculations[0],Double.parseDouble(displayText));
     @FXML
     public void handleBinaryOperation(Event event) {
         Button btn = (Button) event.getSource();
@@ -163,8 +161,8 @@ public class MainViewController {
      *
      * Вызывается из {@link #handleUnaryOperation(Event)} (Event)} и непосредственно выполняет расчеты.
      */
-    private Function<UnaryOperator<Double>, Double> preformUnaryOperation =
-            operator -> operator.apply(Double.valueOf(display.getText()));
+    private BiFunction<UnaryOperator<Double>, String, Double> preformUnaryOperation =
+            (operator, displayText) -> operator.apply(Double.valueOf(displayText));
     @FXML
     public void handleUnaryOperation(Event event) {
         Button btn = (Button) event.getSource();
