@@ -53,7 +53,8 @@ public class MainViewController {
             put("+",  () -> { current = (n1,n2) ->  n1 + n2;
                               operation = "+";
                               return preformBinaryOperation.apply(last, display.getText());  });
-            put("=",  () ->          preformBinaryOperation.apply(current, display.getText()) );
+            put("=",  () -> { newNumber = true;
+                              return preformBinaryOperation.apply(current, display.getText());  });
         }
     };
     private Map<String, Supplier<Double>> unaryOperationsMap = new HashMap<String, Supplier<Double>>() {
