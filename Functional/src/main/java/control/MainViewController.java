@@ -40,27 +40,27 @@ public class MainViewController {
     private double[] calculations = {0.0, 0.0};
 
     //Замена свичу с нажатием операций
-    private Map<String, Supplier<Double>> binaryOperationsMap = new HashMap<String, Supplier<Double>>() {
-        {   put("÷",  () -> { current = (n1,n2) ->  n1 / n2;
+    private Map<String, Function<String, Double>> binaryOperationsMap = new HashMap<String, Function<String, Double>>() {
+        {   put("÷",  (str) -> { current = (n1,n2) ->  n1 / n2;
                               operation = "/";
-                              return preformBinaryOperation.apply(last, display.getText());  });
-            put("×",  () -> { current = (n1,n2) ->  n1 * n2;
+                              return preformBinaryOperation.apply(last, str);  });
+            put("×",  (str) -> { current = (n1,n2) ->  n1 * n2;
                               operation = "×";
-                              return preformBinaryOperation.apply(last, display.getText());  });
-            put("-",  () -> { current = (n1,n2) ->  n1 - n2;
+                              return preformBinaryOperation.apply(last, str);  });
+            put("-",  (str) -> { current = (n1,n2) ->  n1 - n2;
                               operation = "-";
-                              return preformBinaryOperation.apply(last, display.getText());  });
-            put("+",  () -> { current = (n1,n2) ->  n1 + n2;
+                              return preformBinaryOperation.apply(last, str);  });
+            put("+",  (str) -> { current = (n1,n2) ->  n1 + n2;
                               operation = "+";
-                              return preformBinaryOperation.apply(last, display.getText());  });
-            put("=",  () -> { newNumber = true;
-                              return preformBinaryOperation.apply(current, display.getText());  });
+                              return preformBinaryOperation.apply(last, str);  });
+            put("=",  (str) -> { newNumber = true;
+                              return preformBinaryOperation.apply(current, str);  });
         }
     };
-    private Map<String, Supplier<Double>> unaryOperationsMap = new HashMap<String, Supplier<Double>>() {
-        {   //            () -> n1 -> n1 * (-1)); Функции высшего порядка
-            put("sign",   () ->   preformUnaryOperation.apply(n1 -> n1 * (-1), display.getText()));
-            put("percent",() ->   preformUnaryOperation.apply(n1 -> n1 / 100, display.getText()));
+    private Map<String, Function<String, Double>> unaryOperationsMap = new HashMap<String, Function<String, Double>>() {
+        {   //            (str) -> n1 -> n1 * (-1)); Функции высшего порядка
+            put("sign",   (str) ->   preformUnaryOperation.apply(n1 -> n1 * (-1), str));
+            put("percent",(str) ->   preformUnaryOperation.apply(n1 -> n1 / 100,  str));
         }
     };
 
@@ -100,8 +100,6 @@ public class MainViewController {
 
     /**
      * Выводит цифру на экран
-     *
-     *
      */
     @FXML
     public void handleDigit(Event event){
@@ -140,7 +138,7 @@ public class MainViewController {
         if (!operation.isEmpty())
         expression = numberParser.apply(calculations[0]) + " " + operation + " " + display.getText();
 
-        calculations[0] = binaryOperationsMap.get(btn.getText()).get();
+        calculations[0] = binaryOperationsMap.get(btn.getText()).apply(display.getText());
         display.setText(numberParser.apply(calculations[0]));
 
         if (!expression.isEmpty())
@@ -171,7 +169,7 @@ public class MainViewController {
         if (btn.getId().equals("percent"))
         expression = display.getText();
 
-        calculations[1] = unaryOperationsMap.get(btn.getId()).get();
+        calculations[1] = unaryOperationsMap.get(btn.getId()).apply(display.getText());
         display.setText(numberParser.apply(calculations[1]));
 
         if (btn.getId().equals("percent")) {
