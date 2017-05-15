@@ -175,6 +175,7 @@ public class MainViewController {
         if (btn.getId().equals("percent")) {
             expression += " / " + 100;
             main.addHistory(new Expression(expression, numberParser.apply(calculations[1])));
+            expression = "";
         }
     }
 }

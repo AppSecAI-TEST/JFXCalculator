@@ -138,14 +138,26 @@ public class MainViewController {
                     break;
                 case "percent":
                     expression = parseNumber(Double.valueOf(display.getText())) + " / 100";
-                    calculations[0] = Double.parseDouble(display.getText()) / 100;
-                    expResult = Double.toString(calculations[0]);
 
-                    if (firstOperation) {
+                    if(!firstOperation) {
+                        calculations[1] = Double.parseDouble(display.getText()) / 100;
+                        expResult = Double.toString(calculations[1]);
                         main.addHistory(new Expression(expression, expResult));
+                        expression = "";
+                        display.setText(parseNumber(calculations[1]));
+                        operations[4] = true;
+                        newNumber = true;
+                        firstOperation = false;
+                        return;
                     }
 
+                    calculations[0] = Double.parseDouble(display.getText()) / 100;
+                    expResult = Double.toString(calculations[0]);
+                    main.addHistory(new Expression(expression, expResult));
+                    expression = "";
                     operations[4] = true;
+                    newNumber = true;
+                    firstOperation = false;
                     break;
             }
         } catch (NumberFormatException e) {
@@ -156,7 +168,7 @@ public class MainViewController {
 
         display.setText(parseNumber(calculations[0]));
 
-        if (!firstOperation) {
+        if (!firstOperation && !expression.isEmpty()) {
             expResult = display.getText();
             main.addHistory(new Expression(expression, expResult));
         }
