@@ -1,11 +1,5 @@
 package expression;
 
-/**
- * Представление выражения и его результа
- *
- * Объекты данного класса сохраняются в {@code ObservableList}, который используется
- * для отображения всех вычислений текущей сессии.
- */
 public class Expression {
     private String exp;
     private String result;

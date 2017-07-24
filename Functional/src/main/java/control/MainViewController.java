@@ -10,36 +10,24 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 
-/**
- * Логика обработки взаимодействий с {@code GUI} калькулятора
- *
- * Класс берет на себя управление элементами графического интерфейса, с fxml документом.
- * {@link #handleDigit(Event)} выодит нажатые цифры на экран, {@link #handleBinaryOperation(Event), {@link #handleUnaryOperation(Event)}} производят необходимое
- * действие над числами и др.
- */
 public class MainViewController {
 
     private Main main;
     private String expression = "";
     private String operation = "";
 
-    //Новое число или все еще цифра
     private boolean newNumber = false;
 
-    //Элементы GUI с fxml док-та
     @FXML private TextArea display;
 
     @FXML private Button delete;
-    //Фактически нажатие на кнопку операции -> выполнить предыдущею
-    //Поэтому выполняем предыдущею, и сохраняем текущею в предыдущею
+
     private BinaryOperator<Double> last = (n1, n2) -> n2;
 
     private BinaryOperator<Double> current = last;
 
-    //Сохранение рез-в.
     private double[] calculations = {0.0, 0.0};
 
-    //Замена свичу с нажатием операций
     private Map<String, Function<String, Double>> binaryOperationsMap = new HashMap<String, Function<String, Double>>() {
         {   put("÷",  (str) -> { current = (n1,n2) ->  n1 / n2;
                               operation = "/";
@@ -58,7 +46,7 @@ public class MainViewController {
         }
     };
     private Map<String, Function<String, Double>> unaryOperationsMap = new HashMap<String, Function<String, Double>>() {
-        {   //            (str) -> n1 -> n1 * (-1)); Функции высшего порядка
+        {
             put("sign",   (str) ->   preformUnaryOperation.apply(n1 -> n1 * (-1), str));
             put("percent",(str) ->   preformUnaryOperation.apply(n1 -> n1 / 100,  str));
         }
@@ -72,9 +60,7 @@ public class MainViewController {
                                           .limit(7)
                                           .collect(StringBuilder::new,StringBuilder::appendCodePoint, StringBuilder::append)
                                           .toString();
-    /**
-     * Настройка экрана вывода
-     */
+
     public void setDisplay(Main main) {
         this.main = main;
         display.setEditable(false);
@@ -83,7 +69,6 @@ public class MainViewController {
 
     @FXML
     public void handleDelete() {
-        //restores default state
         delete.setText("AC");
         display.setText("0");
 
@@ -98,21 +83,16 @@ public class MainViewController {
         newNumber = false;
     }
 
-    /**
-     * Выводит цифру на экран
-     */
     @FXML
     public void handleDigit(Event event){
 
         Button btn = (Button) event.getSource();
 
-        //Вывод точки т.к с ней особая ситуация
         if (btn.getText().equals(".")) {
             if (!display.getText().contains(".")) display.appendText(".");
             return;
         }
 
-        //Не позволяет 0(0)
         if (display.getText().equals("0")){
             delete.setText("C");
             display.setText("");
@@ -124,11 +104,6 @@ public class MainViewController {
         newNumber = false;
     }
 
-    /**
-     * Производит бинарную операцию с введенными данными.
-     *
-     * Вызывается из {@link #handleBinaryOperation(Event)} и непосредственно выполняет расчеты.
-     */
     private BiFunction<BinaryOperator<Double>, String, Double> preformBinaryOperation =
             (operator, displayText) -> operator.apply(calculations[0],Double.parseDouble(displayText));
     @FXML
@@ -155,11 +130,6 @@ public class MainViewController {
         }
     }
 
-    /**
-     * Производит унарную операцию с данными.
-     *
-     * Вызывается из {@link #handleUnaryOperation(Event)} (Event)} и непосредственно выполняет расчеты.
-     */
     private BiFunction<UnaryOperator<Double>, String, Double> preformUnaryOperation =
             (operator, displayText) -> operator.apply(Double.valueOf(displayText));
     @FXML

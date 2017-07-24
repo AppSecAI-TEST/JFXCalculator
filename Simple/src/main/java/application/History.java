@@ -10,25 +10,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-/**
- * Окно с историей вычислений
- *
- * Данный класс формирует {@code TableView} в котором будут отображаться все вычисления и их результаты.
- * Окно отркывается при нажатии пункта {@code MenuBar} History. Создание всех и заполнение их данными происходит в
- * {@link #createHistoryView()}.
- */
 class History {
     private ObservableList<Expression> historyLogs;
 
     private Group root = new Group();
     private Scene scene;
 
-    /**
-     * Конструктор, вызываемый ри нажатии пункта {@code MenuBar} History в {@code MainView}
-     *
-     * @param main MainView
-     * @param historyLogs список операций
-     */
     History(Main main, ObservableList<Expression> historyLogs) {
         this.historyLogs = historyLogs;
 
@@ -49,27 +36,21 @@ class History {
         historyStage.show();
     }
 
-    /**
-     * Создание и заполнение таблицы данными
-     */
     private void createHistoryView() {
         TableView<Expression> tableView = new TableView<>();
 
-        //Колонка Выражений <Класс, Тип поля класса>
         TableColumn<Expression, String> expressionTableColumn = new TableColumn<>("Expression");
         expressionTableColumn.setMinWidth(250);
         expressionTableColumn.setResizable(true);
-        //exp - название поля класса
+
         expressionTableColumn.setCellValueFactory(new PropertyValueFactory<>("exp"));
 
-        //Колонка Результатов <Класс, Тип поля класса>
         TableColumn<Expression, String> resultTableColumn = new TableColumn<>("Result");
         resultTableColumn.setMinWidth(150);
         resultTableColumn.setResizable(true);
-        //result - название поля класса
+
         resultTableColumn.setCellValueFactory(new PropertyValueFactory<>("result"));
 
-        //заполнение таблицы
         tableView.getColumns().addAll(expressionTableColumn,resultTableColumn);
         tableView.setItems(historyLogs);
 

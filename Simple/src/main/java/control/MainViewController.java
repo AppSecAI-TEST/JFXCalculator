@@ -10,53 +10,32 @@ import javafx.scene.control.TextArea;
 import application.Main;
 import expression.Expression;
 
-/**
- * Логика обработки взаимодействий с {@code GUI} калькулятора
- *
- * Класс берет на себя управление элементами графического интерфейса, с fxml документом.
- * {@link #handleDigit(Event)} выодит нажатые цифры на экран, {@link #handleOperation(Event)} производит необходимое
- * действие над числами и др.
- */
 public class MainViewController {
 
-    //Хранят операции и их результаты
     private String expResult;
     private String expression;
     private Main main;
 
-    //Элементы GUI с fxml док-та
     @FXML private TextArea display;
     @FXML private Button delete;
 
-    //Арифмет. операции
     private boolean[] operations = new boolean[5];
 
-    //Сохранение рез-в.
     private Double[] calculations = {0.0, 0.0};
 
-    //Новое число или все еще цифра
     private boolean newNumber = false;
 
-    //Первая операция - сохранить число с display | !Первая операция - произвести нужное действие
     private boolean firstOperation = true;
 
-    /**
-     * Настройка экрана вывода
-     */
     public void setDisplay(Main main) {
         this.main = main;
         display.setEditable(false);
         display.setText("0");
     }
 
-    /**
-     * Обработка нажатия цифры
-     *
-     * @param event нажатая кнопка
-     */
     @FXML
     public void handleDigit(Event event){
-        //Не позволяет 0(0)
+
         if (display.getText().equals("0")){
             delete.setText("C");
             display.setText("");
@@ -67,32 +46,14 @@ public class MainViewController {
 
         switch(numberId) {
             case "_0" :
-                displayDigit(numberId);
-                break;
             case "_1" :
-                displayDigit(numberId);
-                break;
             case "_2" :
-                displayDigit(numberId);
-                break;
             case "_3" :
-                displayDigit(numberId);
-                break;
             case "_4" :
-                displayDigit(numberId);
-                break;
             case "_5" :
-                displayDigit(numberId);
-                break;
             case "_6" :
-                displayDigit(numberId);
-                break;
             case "_7" :
-                displayDigit(numberId);
-                break;
             case "_8" :
-                displayDigit(numberId);
-                break;
             case "_9" :
                 displayDigit(numberId);
                 break;
@@ -108,11 +69,6 @@ public class MainViewController {
         newNumber = false;
     }
 
-    /**
-     * Обработка операций
-     *
-     * @param event нажатая кнопка
-     */
     @FXML
     public void handleOperation(Event event) {
         Button btn = (Button) event.getSource();
@@ -176,9 +132,6 @@ public class MainViewController {
         firstOperation = false;
     }
 
-    /**
-     * Обаботка измения знака числа
-     */
     @FXML
     public void handleChangeSign() {
         double number;
@@ -199,7 +152,7 @@ public class MainViewController {
 
     @FXML
     public void handleDelete() {
-        //restores default state
+
         delete.setText("AC");
         display.setText("0");
         for(int i = 0; i < 2; i++) {
@@ -265,11 +218,6 @@ public class MainViewController {
         newNumber = true;
     }
 
-    /**
-     * Производит операцию с введенными данными.
-     *
-     * Метод вызывается из {@link #handleOperation(Event)} и непосредственно выполняет расчеты.
-     */
     private void preformOperation() {
        try {
            if (firstOperation) {
@@ -303,15 +251,6 @@ public class MainViewController {
        }
     }
 
-    /**
-     * Вывод числа на экран.
-     *
-     * Метод проверяет имеет ли полученный {@code Double} дробную часть.
-     * Если дробная часть отсутсвует, то число выводится без нее (Прим: 322).
-     *
-     * @param number Double число, которое следует подготовить к выводу
-     * @return  Обработанное строковое представление полученного числа
-     */
     private String parseNumber(Double number) {
         if (number == Math.floor(number) && Double.isFinite(number)) {
             return Long.toString(number.longValue());
@@ -327,11 +266,6 @@ public class MainViewController {
         }
     }
 
-    /**
-     * Выводит цифру на экран
-     *
-     * @param digit Кнопка, которой соответсвует цифра
-     */
     private void displayDigit(String digit) {
         if (newNumber) {
             display.setText(digit.substring(1));
