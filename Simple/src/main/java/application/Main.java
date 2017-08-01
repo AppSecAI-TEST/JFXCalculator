@@ -70,12 +70,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                Platform.exit();
-            }
-        });
+        primaryStage.setOnCloseRequest(event -> Platform.exit());
     }
 
     private void createMainView() {
@@ -100,20 +95,10 @@ public class Main extends Application {
         Menu menu = new Menu("Menu");
 
         MenuItem history = new MenuItem("History");
-        history.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                new History(main,historyLogs);
-            }
-        });
+        history.setOnAction(event -> new History(main,historyLogs));
 
         MenuItem close = new MenuItem("Close");
-        close.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.exit(0);
-            }
-        });
+        close.setOnAction(event -> System.exit(0));
 
         menu.getItems().addAll(history, close);
 

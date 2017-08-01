@@ -44,28 +44,17 @@ public class MainViewController {
         Button btn = (Button) event.getSource();
         String numberId = btn.getId();
 
-        switch(numberId) {
-            case "_0" :
-            case "_1" :
-            case "_2" :
-            case "_3" :
-            case "_4" :
-            case "_5" :
-            case "_6" :
-            case "_7" :
-            case "_8" :
-            case "_9" :
-                displayDigit(numberId);
-                break;
-            case "dot" :
+        if (numberId.equals("dot")) {
                 if (display.getText().equals("")) {
                     display.setText("0.");
                 }
                 else if (!display.getText().contains(".")) {
                     display.appendText(".");
                 }
-                break;
+        } else {
+            displayDigit(numberId);
         }
+
         newNumber = false;
     }
 
